@@ -2,88 +2,112 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Commuter Companion - RailPulse Sentinel</title>
-    <!-- Leaflet CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, interactive-widget=resizes-content">
+    <meta name="theme-color" content="#f5f6f2">
+    <title>RailPulse — Smart Commuter Companion</title>
+    <meta name="description" content="Plan Singapore train and bus journeys with LTA timetables, service alerts, station crowd levels and live bus arrivals.">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
     <link rel="stylesheet" href="/style.css">
 </head>
-<body style="display: flex; flex-direction: column; height: 100vh; margin: 0;">
-
-    <!-- Live Alert Banner (Now in a dedicated header area) -->
-    <div id="alert-banner" class="hidden" style="flex-shrink: 0; width: 100%; border-bottom: 1px solid #333; background: #1e1e1e; z-index: 2000; position: relative; max-width: none; border-left: none; top: 0; left: 0; transform: none; border-radius: 0;">
-        <div class="alert-header" id="alert-header-text" style="display: flex; justify-content: space-between; align-items: center; cursor: pointer; padding: 10px 15px;">
-            <span style="font-weight: bold;">⚠️ MRT Service Info</span>
-            <span id="alert-toggle-icon">▼</span>
-        </div>
-        <div class="alert-body" id="alert-body-container" style="padding: 15px;">
-            <div id="alert-content">Loading alerts...</div>
-            <button id="find-route-btn" class="hidden action-btn" style="width: auto; margin-top: 10px;">Find Alternate Route</button>
-        </div>
-    </div>
-
-    <!-- Main content wrapper -->
-    <div style="flex-grow: 1; width: 100%; position: relative; display: flex;">
-        <!-- Map container -->
-        <div id="map" style="flex-grow: 1; width: 100%;"></div>
-
-        <!-- Map Legend -->
-        <div id="map-legend" style="position: absolute; bottom: 20px; left: 20px; z-index: 1000; background: rgba(30, 30, 30, 0.9); padding: 10px; border-radius: 8px; border: 1px solid #444; pointer-events: none;">
-            <div style="font-weight: bold; margin-bottom: 8px; font-size: 13px;">MRT Lines</div>
-            <div id="legend-content"></div>
-        </div>
-
-        <!-- My Route Personalization Panel -->
-        <div id="route-panel">
-            <div class="panel-header">🗺️ My Route</div>
-            <div class="panel-body">
-                <div class="input-group">
-                    <label for="origin-select">Origin Station:</label>
-                    <select id="origin-select">
-                        <option value="">Select origin...</option>
-                    </select>
+<body data-view="plan" data-panel="planner" data-sheet="peek">
+    <a class="skip-link" href="#planner-section">Skip to journey planner</a>
+    <header class="app-header">
+        <div class="brand"><span class="brand-icon" aria-hidden="true">↗</span><div><strong>RailPulse<span class="brand-dot">.</span></strong><span>Singapore, on the move</span></div></div>
+        <nav class="view-switch" aria-label="App views">
+            <button id="view-plan" class="selected" type="button" aria-pressed="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 6h14M5 12h10M5 18h6"/><circle cx="18" cy="17" r="3"/></svg><span>Plan</span></button>
+            <button id="view-map" type="button" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 5 6-2 6 2 6-2v16l-6 2-6-2-6 2Zm6-2v16m6-14v16"/></svg><span>Map</span></button>
+            <button id="view-buses" type="button" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="3" width="14" height="16" rx="3"/><path d="M5 11h14M8 19v2m8-2v2M8 15h1m6 0h1M9 6h6"/></svg><span>Buses</span></button>
+        </nav>
+        <div class="header-actions"><span class="source-pill"><i aria-hidden="true"></i>LTA DataMall</span><button id="theme-toggle" class="theme-toggle" type="button" aria-label="Switch to dark theme"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14A8 8 0 0 1 10 4a8 8 0 1 0 10 10Z"/></svg><span id="theme-label">Dark</span></button></div>
+    </header>
+    <details id="service-notices" class="notices">
+        <summary><span id="alert-title">Checking service advisories…</span><span id="alert-updated" class="muted"></span></summary>
+        <div id="alert-content" class="notice-content" aria-live="polite"></div>
+    </details>
+    <main>
+        <aside class="sidebar" aria-label="Journey planner">
+            <div class="sheet-toolbar"><span id="panel-heading">YOUR JOURNEY</span><div><button id="edit-journey" class="text-button hidden" type="button">Edit journey</button><button id="sheet-expand" class="sheet-expand" type="button" aria-label="Expand panel" aria-expanded="false" aria-controls="panel-scroll"><span class="sheet-handle" aria-hidden="true"></span><span id="sheet-expand-label">Expand</span></button></div></div>
+            <div id="planner-status" class="panel-status small muted" role="status"></div>
+            <div id="panel-scroll" class="panel-scroll">
+            <section id="planner-section" tabindex="-1">
+                <h1>Where to today?</h1>
+                <div class="mode-switch" aria-label="Journey type">
+                    <button type="button" id="train-only-mode" aria-pressed="false">Train only</button>
+                    <button type="button" id="train-mode" class="selected" aria-pressed="true">Train & bus</button>
+                    <button type="button" id="bus-mode" aria-pressed="false">Bus only</button>
                 </div>
-                <div class="input-group">
-                    <label for="dest-select">Destination Station:</label>
-                    <select id="dest-select">
-                        <option value="">Select destination...</option>
-                    </select>
-                </div>
-                <div style="display: flex; gap: 5px; margin-top: 10px;">
-                    <button id="plan-route-btn" class="action-btn" style="background-color: #1976d2; flex: 1; margin: 0;">Plan Route</button>
-                    <button id="clear-route-btn" class="action-btn" style="background-color: #555; flex: 1; margin: 0;">Clear</button>
-                </div>
-                <div id="route-results" class="hidden" style="margin-top: 15px; border-top: 1px solid #333; padding-top: 10px;">
-                    <!-- Route options injected by JS -->
-                </div>
-
-                <!-- Bus Timing Section -->
-                <div style="margin-top: 15px; border-top: 1px solid #333; padding-top: 10px;">
-                    <div class="input-group">
-                        <label for="bus-stop-input">Live Bus Timings (Stop Code):</label>
-                        <div style="display: flex; gap: 5px;">
-                            <input type="text" id="bus-stop-input" placeholder="e.g. 01012" style="flex: 1; padding: 8px; background: #2c2c2c; border: 1px solid #444; color: white; border-radius: 4px;">
-                            <button id="search-bus-btn" style="background: #4caf50; color: white; border: none; border-radius: 4px; padding: 0 12px; cursor: pointer;">🔍</button>
+                <form id="journey-form">
+                    <div id="train-fields" class="location-fields">
+                        <label for="origin-select">From station</label>
+                        <select id="origin-select" disabled><option value="">Loading LTA stations…</option></select>
+                        <label for="dest-select">To station</label>
+                        <select id="dest-select" disabled><option value="">Loading LTA stations…</option></select>
+                    </div>
+                    <div id="bus-fields" class="location-fields hidden">
+                        <label for="bus-origin">From bus stop</label>
+                        <input id="bus-origin" list="bus-origin-options" placeholder="Stop name or five-digit code" autocomplete="off">
+                        <datalist id="bus-origin-options"></datalist>
+                        <label for="bus-destination">To bus stop</label>
+                        <input id="bus-destination" list="bus-destination-options" placeholder="Stop name or five-digit code" autocomplete="off">
+                        <datalist id="bus-destination-options"></datalist>
+                        <p class="small muted">Find direct buses between two stops.</p>
+                    </div>
+                    <div class="access-option">
+                        <label class="checkbox-label" for="wheelchair-access"><input type="checkbox" id="wheelchair-access" aria-describedby="wheelchair-help"> Wheelchair access</label>
+                        <p id="wheelchair-help" class="small muted">Lift checks & wheelchair-equipped buses.</p>
+                        <div id="transfer-settings" class="hidden">
+                            <label for="transfer-minutes">Time for each train transfer</label>
+                            <div class="transfer-control"><input id="transfer-minutes" type="number" min="4" max="30" step="1" value="8" required disabled aria-describedby="transfer-help"><span>minutes</span></div>
+                            <p id="transfer-help" class="small muted">Adjust this planning allowance for your pace and lift access.</p>
                         </div>
                     </div>
-                    <div id="bus-results" class="hidden" style="margin-top: 10px; font-size: 13px;">
-                        <!-- Bus timing results injected here -->
-                    </div>
-                </div>
+                    <details class="journey-preferences"><summary>Journey preferences <span id="preference-summary">Fastest</span></summary>
+                        <label for="preference">What matters most?</label>
+                        <select id="preference">
+                            <option value="fastest">Shortest travel time</option>
+                            <option value="walking">Less walking</option>
+                            <option value="transfers">Fewer train transfers</option>
+                        </select>
+                    </details>
+                </form>
+            </section>
+            <section id="route-results" class="hidden" aria-live="polite"></section>
+            <section id="bus-section" class="bus-section">
+                <h1>Catch your next bus.</h1>
+                <p class="section-intro">Arrivals & crowd levels, at a glance.</p>
+                <form id="bus-form">
+                    <label for="bus-stop-input">Search a stop</label>
+                    <div class="bus-search"><input id="bus-stop-input" list="bus-search-options" placeholder="e.g. 01012 or Hotel Grand Pacific" autocomplete="off"><button type="submit" class="secondary" aria-label="Show bus arrivals">Go</button></div>
+                    <datalist id="bus-search-options"></datalist>
+                </form>
+                <label class="checkbox-label bus-access-filter" for="bus-wheelchair-access"><input type="checkbox" id="bus-wheelchair-access"> Wheelchair-equipped buses only</label>
+                <div id="bus-results" aria-live="polite"><p class="muted small">Arrival times, bus crowd levels and vehicle type.</p></div>
+            </section>
+            <details class="data-notes">
+                <summary>About these results</summary>
+                <p>Train departures and travel times use LTA’s published timetable, including its service calendars. They are scheduled times, not live predictions. Transfers allow four minutes; your actual walking time may differ.</p>
+                <p>Bus arrival predictions and occupancy come from LTA. Total bus journey times are calculated estimates: route distance at 18 km/h, plus 21 seconds per stop. Walking uses straight-line distance × 1.3 at 75 m/min; check your actual pedestrian route.</p>
+                <p>Bus crowd levels use LTA’s occupancy categories: low = seats available; moderate = standing available; high = limited standing. These are categories, not passenger counts or percentages. Missing or old readings are labelled, and occupancy can change before boarding.</p>
+                <p>Train crowd levels describe stations, not individual train carriages. LTA updates them in ten-minute intervals. Missing or old data is labelled.</p>
+                <p>Bus alternatives cover direct services within an estimated 1 km walk at each end (450 m with “Less walking”). Transfers between buses are not included. Diversions may change the published route.</p>
+                <p>Map lines connect station or stop coordinates. They are schematic connections, not exact tracks or roads.</p>
+                <p>Wheelchair access filters bus predictions by LTA’s wheelchair-accessible bus flag. It also checks reported station lift maintenance and avoids transfers at affected stations. An outage at your start or destination is flagged for staff assistance; it does not mean every lift at that station is unavailable. No reported outage is not a guarantee that all lifts work.</p>
+                <p>Step-free routes to bus stops, accessible station entrances and wheelchair-bay availability are not verified by these feeds. Bus access-time estimates still use the general walking model; adjust for your pace. The train transfer allowance can be changed when wheelchair access is selected.</p>
+                <a href="https://www.lta.gov.sg/content/ltagov/en/getting_around/public_transport/a_better_public_transport_experience/an_inclusive_public_transport_system.html" target="_blank" rel="noreferrer">LTA accessibility information ↗</a><br>
+                <a href="https://datamall.lta.gov.sg/content/dam/datamall/datasets/LTA_DataMall_API_User_Guide.pdf" target="_blank" rel="noreferrer">LTA data documentation ↗</a>
+            </details>
             </div>
-        </div>
-
-        <!-- Proactive Suggestion / ETA Comparison Panel -->
-        <div id="suggestion-panel" class="hidden">
-            <div class="panel-header">⚡ Decision Support</div>
-            <div id="suggestion-content" class="panel-body">
-                <!-- Content injected by JS -->
-            </div>
-        </div>
-    </div>
-
-    <!-- Leaflet JS -->
+            <div id="panel-actions" class="panel-actions"><div class="form-actions"><button id="plan-route-btn" class="primary" type="submit" form="journey-form">Find my journey <span aria-hidden="true">→</span></button><button id="clear-route-btn" class="secondary" type="button">Clear</button></div></div>
+        </aside>
+        <section class="map-panel" aria-label="Singapore transport map">
+            <div id="map"></div>
+            <div class="map-caption"><strong id="map-caption">Singapore rail network</strong><span id="network-status">Loading the active timetable…</span></div>
+            <button id="fit-route-btn" class="fit-route hidden" type="button">Fit route</button>
+            <div id="map-legend" class="legend" aria-label="Map legend"></div>
+            <button id="map-open-planner" class="map-open-planner" type="button"><span id="map-open-label">Plan a journey</span><span aria-hidden="true">↗</span></button>
+        </section>
+    </main>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-    <script src="/app.js"></script>
+    <script src="/app.js" defer></script>
 </body>
 </html>
