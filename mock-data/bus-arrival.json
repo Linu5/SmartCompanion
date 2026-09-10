@@ -1,0 +1,21 @@
+{
+  "odata.metadata": "http://datamall2.mytransport.sg/ltaodataservice/$metadata#BusArrivalv2",
+  "BusStopCode": "28009",
+  "Services": [
+    {
+      "ServiceNo": "Bridging Bus",
+      "Operator": "SMRT",
+      "NextBus": {
+        "OriginCode": "28009",
+        "DestinationCode": "17171",
+        "EstimatedArrival": "2026-09-10T17:15:00+08:00",
+        "Latitude": "1.3331",
+        "Longitude": "103.7422",
+        "VisitNumber": "1",
+        "Load": "SDA",
+        "Feature": "WAB",
+        "Type": "SD"
+      }
+    }
+  ]
+}

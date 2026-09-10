@@ -1,0 +1,3843 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aljunied",
+        "code": "EW9",
+        "color": "green",
+        "line": "East West"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8829087,
+          1.3164515
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Kallang",
+        "code": "EW10",
+        "color": "green",
+        "line": "East West"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8713388,
+          1.3114669
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Yio Chu Kang",
+        "code": "NS15",
+        "color": "red",
+        "line": "North South"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8449359,
+          1.3817905
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Bedok",
+        "code": "EW5",
+        "color": "green",
+        "line": "East West"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.9302175,
+          1.3239666
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Redhill",
+        "code": "EW18",
+        "color": "green",
+        "line": "East West"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8167692,
+          1.2896353
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Queenstown",
+        "code": "EW19",
+        "color": "green",
+        "line": "East West"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8060366,
+          1.2946226
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Commonwealth",
+        "code": "EW20",
+        "color": "green",
+        "line": "East West"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7983085,
+          1.3024428
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Dover",
+        "code": "EW22",
+        "color": "green",
+        "line": "East West"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7786108,
+          1.3114155
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Jurong East",
+        "code": "EW24 NS1",
+        "color": "green",
+        "line": "East West"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7422939,
+          1.333108
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Chinese Garden",
+        "code": "EW25",
+        "color": "green",
+        "line": "East West"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7325474,
+          1.3424141
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lakeside",
+        "code": "EW26",
+        "color": "green",
+        "line": "East West"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7206931,
+          1.34425
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Ranggung",
+        "code": "SE5",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8973612,
+          1.3840465
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Boon Lay",
+        "code": "EW27",
+        "color": "green",
+        "line": "East West"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7058124,
+          1.3385504
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Pioneer",
+        "code": "EW28",
+        "color": "green",
+        "line": "East West"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.6974103,
+          1.3375884
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Joo Koon",
+        "code": "EW29",
+        "color": "green",
+        "line": "East West"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.6782221,
+          1.327735
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Cheng Lim",
+        "code": "SW1",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8937904,
+          1.3962917
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Farmway",
+        "code": "SW2",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8892243,
+          1.3971948
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Fernvale",
+        "code": "SW5",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8762794,
+          1.3919037
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Kupang",
+        "code": "SW3",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.881246,
+          1.3982038
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Thanggam",
+        "code": "SW4",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8756345,
+          1.3973334
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Layar",
+        "code": "SW6",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8800319,
+          1.3920846
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Tongkang",
+        "code": "SW7",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8858267,
+          1.3894081
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Renjong",
+        "code": "SW8",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8905331,
+          1.3867294
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Resorts World",
+        "code": "Resorts World",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8209626,
+          1.2555418
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Imbiah",
+        "code": "Imbiah",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8194525,
+          1.2539153
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Gul Circle",
+        "code": "EW30",
+        "color": "green",
+        "line": "East West"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.6606551,
+          1.3196353
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Tuas Crescent",
+        "code": "EW31",
+        "color": "green",
+        "line": "East West"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.6489064,
+          1.3211582
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Tuas West Road",
+        "code": "EW32",
+        "color": "green",
+        "line": "East West"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.6395694,
+          1.3300518
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Tuas Link",
+        "code": "EW33",
+        "color": "green",
+        "line": "East West"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.6367718,
+          1.3402939
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Kembangan",
+        "code": "EW6",
+        "color": "green",
+        "line": "East West"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.9129269,
+          1.3210321
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Simei",
+        "code": "EW3",
+        "color": "green",
+        "line": "East West"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.953371,
+          1.3431881
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Bukit Batok",
+        "code": "NS2",
+        "color": "red",
+        "line": "North South"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7495906,
+          1.3490572
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Admiralty",
+        "code": "NS10",
+        "color": "red",
+        "line": "North South"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8009592,
+          1.4406369
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Bangkit",
+        "code": "BP9",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7726501,
+          1.3800412
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Bukit Gombak",
+        "code": "NS3",
+        "color": "red",
+        "line": "North South"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7518249,
+          1.3588929
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Fajar",
+        "code": "BP10",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7708754,
+          1.3845932
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Jelapang",
+        "code": "BP12",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7645139,
+          1.3866937
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Keat Hong",
+        "code": "BP3",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7490207,
+          1.3786034
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Kranji",
+        "code": "NS7",
+        "color": "red",
+        "line": "North South"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7619891,
+          1.4252189
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Marsiling",
+        "code": "NS",
+        "color": "red",
+        "line": "North South"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7741243,
+          1.4325704
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Pending",
+        "code": "BP8",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7712587,
+          1.3761841
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Petir",
+        "code": "BP7",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7666291,
+          1.3777652
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Phoenix",
+        "code": "BP5",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.758008,
+          1.3786164
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Segar",
+        "code": "BP11",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7695804,
+          1.3877855
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Sembawang",
+        "code": "NS11",
+        "color": "red",
+        "line": "North South"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8200555,
+          1.4490928
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Senja",
+        "code": "BP13",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7623822,
+          1.3826778
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "South View",
+        "code": "BP2",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7452826,
+          1.3802716
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Teck Whye",
+        "code": "BP4",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7536471,
+          1.3766705
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Yew Tee",
+        "code": "NS5",
+        "color": "red",
+        "line": "North South"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7474009,
+          1.3974608
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Yishun",
+        "code": "NS13",
+        "color": "red",
+        "line": "North South"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8350282,
+          1.4293839
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Bakau",
+        "code": "SE3",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.905418,
+          1.3880083
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Compassvale",
+        "code": "SE1",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.9004349,
+          1.394518
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Kangkar",
+        "code": "SE4",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.9022055,
+          1.3839286
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Rumbia",
+        "code": "SE2",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.9059729,
+          1.3914749
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Woodlands Train Checkpoint",
+        "code": "Woodlands Train Checkpoint",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.769993,
+          1.4450308
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Bukit Panjang",
+        "code": "DT1 BP6",
+        "color": "blue",
+        "line": "Downtown"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7630947,
+          1.3779175
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Choa Chu Kang",
+        "code": "NS4 BP1",
+        "color": "red",
+        "line": "North South"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.744325,
+          1.3853167
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Eunos",
+        "code": "EW7",
+        "color": "green",
+        "line": "East West"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.9028891,
+          1.3198016
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Khatib",
+        "code": "NS14",
+        "color": "red",
+        "line": "North South"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8330179,
+          1.4173597
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Choa Chu Kang",
+        "code": "NS4 BP1",
+        "color": "red",
+        "line": "North South"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7445341,
+          1.3847493
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Bukit Batok West",
+        "code": "JE3",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7397329,
+          1.3455305
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Tengah Plantation",
+        "code": "JE1",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.733406,
+          1.3573609
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Tengah Park",
+        "code": "JE2",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7368054,
+          1.3522936
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Tawas",
+        "code": "JW2",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.6918893,
+          1.3506557
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Gek Poh",
+        "code": "Gek Poh",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.6980778,
+          1.3483266
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Pandan Reservoir",
+        "code": "JE7",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7448028,
+          1.320439
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Peng Kang Hill",
+        "code": "JW5",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.6785915,
+          1.3428682
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Nanyang Crescent",
+        "code": "JW4",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.6811253,
+          1.3485428
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Nanyang Gateway",
+        "code": "JW3",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.6866773,
+          1.3537812
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Jurong Town Hall",
+        "code": "JE6",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7452272,
+          1.3264148
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Toh Guan",
+        "code": "JE4",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7426012,
+          1.3400465
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Jurong Pier",
+        "code": "JS12",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7104354,
+          1.313022
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Jurong Hill",
+        "code": "JS11",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7102098,
+          1.318581
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Tukang",
+        "code": "JS10",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7092754,
+          1.3253215
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Enterprise",
+        "code": "JS9",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7085422,
+          1.3328021
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Jurong West",
+        "code": "JS6",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7082891,
+          1.3491904
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Corporation",
+        "code": "JS5",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7138109,
+          1.3529781
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Tengah",
+        "code": "JS3",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7300925,
+          1.3662254
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Hong Kah",
+        "code": "JS4",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7261096,
+          1.3581119
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Choa Chu Kang West",
+        "code": "JS2",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7399997,
+          1.379215
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Bahar Junction",
+        "code": "JS7",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7023562,
+          1.3458098
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "B",
+        "code": "B",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.9873758,
+          1.358383
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "C",
+        "code": "C",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.9889622,
+          1.3619808
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "D",
+        "code": "D",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.9918185,
+          1.3610209
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "E",
+        "code": "E",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.9900385,
+          1.3570046
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "A South",
+        "code": "A South",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.9838301,
+          1.350108
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Beach",
+        "code": "Beach",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8177659,
+          1.2512942
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Ang Mo Kio",
+        "code": "NS16",
+        "color": "red",
+        "line": "North South"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8495228,
+          1.3700803
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "HarbourFront",
+        "code": "CC29 NE1",
+        "color": "orange",
+        "line": "Circle"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8215518,
+          1.265362
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "VivoCity",
+        "code": "S1",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8223324,
+          1.265099
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Punggol Point",
+        "code": "PW3",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.9066511,
+          1.4168517
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Samudera",
+        "code": "PW4",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.9021396,
+          1.415889
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Teck Lee",
+        "code": "PW2",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.9065894,
+          1.4127821
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Stadium",
+        "code": "CC6",
+        "color": "orange",
+        "line": "Circle"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8753512,
+          1.3028724
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "A",
+        "code": "A",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.9854577,
+          1.3539198
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "F",
+        "code": "F",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.9885985,
+          1.353361
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Changi Airport",
+        "code": "CG2",
+        "color": "green",
+        "line": "Changi Airport Branch"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.9885325,
+          1.357573
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Bayshore",
+        "code": "TE29",
+        "color": "brown",
+        "line": "Thomson–East Coast"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.9423087,
+          1.3128339
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Bedok South",
+        "code": "TE30",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.949051,
+          1.3164414
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Gardens by the Bay",
+        "code": "TE22",
+        "color": "brown",
+        "line": "Thomson–East Coast"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8679453,
+          1.2792306
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Great World",
+        "code": "TE15",
+        "color": "brown",
+        "line": "Thomson–East Coast"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8333413,
+          1.294615
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Havelock",
+        "code": "TE16",
+        "color": "brown",
+        "line": "Thomson–East Coast"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.833674,
+          1.2885493
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Tanjong Rhu",
+        "code": "TE23",
+        "color": "brown",
+        "line": "Thomson–East Coast"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8734592,
+          1.2973432
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Katong Park",
+        "code": "TE24",
+        "color": "brown",
+        "line": "Thomson–East Coast"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8862178,
+          1.2979605
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lentor",
+        "code": "TE5",
+        "color": "brown",
+        "line": "Thomson–East Coast"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.83637,
+          1.3847492
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Marina Bay",
+        "code": "TE20 NS27 CE2",
+        "color": "brown",
+        "line": "Thomson–East Coast"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.85531,
+          1.2754714
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Marina South",
+        "code": "TE21",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8628857,
+          1.274314
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Marine Parade",
+        "code": "TE26",
+        "color": "brown",
+        "line": "Thomson–East Coast"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.9070729,
+          1.303709
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Marine Terrace",
+        "code": "TE27",
+        "color": "brown",
+        "line": "Thomson–East Coast"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.9150613,
+          1.3066048
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Maxwell",
+        "code": "TE18",
+        "color": "brown",
+        "line": "Thomson–East Coast"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8438816,
+          1.2806224
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Mayflower",
+        "code": "TE6",
+        "color": "brown",
+        "line": "Thomson–East Coast"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8368946,
+          1.3722318
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Mount Pleasant",
+        "code": "TE10",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8351769,
+          1.3285726
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Napier",
+        "code": "TE12",
+        "color": "brown",
+        "line": "Thomson–East Coast"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8191494,
+          1.3067154
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Orchard Boulevard",
+        "code": "TE13",
+        "color": "brown",
+        "line": "Thomson–East Coast"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8238667,
+          1.3031879
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Orchard",
+        "code": "TE14 NS22",
+        "color": "brown",
+        "line": "Thomson–East Coast"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8314155,
+          1.3031258
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Shenton Way",
+        "code": "TE19",
+        "color": "brown",
+        "line": "Thomson–East Coast"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8509192,
+          1.2775343
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Siglap",
+        "code": "TE28",
+        "color": "brown",
+        "line": "Thomson–East Coast"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.9300245,
+          1.3095907
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Springleaf",
+        "code": "TE4",
+        "color": "brown",
+        "line": "Thomson–East Coast"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8178577,
+          1.3981667
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Stevens",
+        "code": "TE11 DT10",
+        "color": "brown",
+        "line": "Thomson–East Coast"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8257629,
+          1.3199757
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Sungei Bedok",
+        "code": "TE31;DT37",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.9572601,
+          1.3203915
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Upper Thomson",
+        "code": "TE8",
+        "color": "brown",
+        "line": "Thomson–East Coast"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8328271,
+          1.354569
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Bright Hill",
+        "code": "TE7",
+        "color": "brown",
+        "line": "Thomson–East Coast"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.834818,
+          1.3630633
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Woodlands North",
+        "code": "TE1 RTS",
+        "color": "brown",
+        "line": "Thomson–East Coast"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7857125,
+          1.4482886
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Woodlands South",
+        "code": "TE3",
+        "color": "brown",
+        "line": "Thomson–East Coast"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7937804,
+          1.4267326
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Woodlands",
+        "code": "TE2 NS9",
+        "color": "brown",
+        "line": "Thomson–East Coast"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7874624,
+          1.4359096
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Tampines",
+        "code": "DT32 EW2",
+        "color": "blue",
+        "line": "Downtown"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.9440831,
+          1.3542293
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Bendemeer",
+        "code": "DT23",
+        "color": "blue",
+        "line": "Downtown"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.862725,
+          1.313636
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Kaki Bukit",
+        "code": "DT28",
+        "color": "blue",
+        "line": "Downtown"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.9083722,
+          1.3350694
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Canberra",
+        "code": "NS12",
+        "color": "red",
+        "line": "North South"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8296301,
+          1.4432131
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Founders' Memorial",
+        "code": "TE22A",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8689681,
+          1.290923
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Mattar",
+        "code": "DT25",
+        "color": "blue",
+        "line": "Downtown"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8833398,
+          1.326848
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "MacPherson",
+        "code": "DT26 CC10",
+        "color": "blue",
+        "line": "Downtown"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8895601,
+          1.326231
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Ubi",
+        "code": "DT27",
+        "color": "blue",
+        "line": "Downtown"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8992487,
+          1.3299411
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Tampines West",
+        "code": "DT31",
+        "color": "blue",
+        "line": "Downtown"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.9385284,
+          1.3457034
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Tampines East",
+        "code": "DT33",
+        "color": "blue",
+        "line": "Downtown"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.9547313,
+          1.3559944
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Upper Changi",
+        "code": "DT34",
+        "color": "blue",
+        "line": "Downtown"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.9614705,
+          1.3419019
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Expo",
+        "code": "DT35 CG1",
+        "color": "blue",
+        "line": "Downtown"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.9626603,
+          1.3350774
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Bedok North",
+        "code": "DT29",
+        "color": "blue",
+        "line": "Downtown"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.9183122,
+          1.3345988
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Punggol Coast",
+        "code": "NE18",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.9101169,
+          1.4149656
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Tawas",
+        "code": "Tawas",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.6918893,
+          1.3506589
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Bedok Reservoir",
+        "code": "DT30",
+        "color": "blue",
+        "line": "Downtown"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.9324653,
+          1.3366043
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Geylang Bahru",
+        "code": "DT24",
+        "color": "blue",
+        "line": "Downtown"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8719586,
+          1.3215052
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Tanjong Pagar",
+        "code": "EW15",
+        "color": "green",
+        "line": "East West"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8457124,
+          1.2766096
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Caldecott",
+        "code": "TE9 CC17",
+        "color": "brown",
+        "line": "Thomson–East Coast"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8398137,
+          1.3373669
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Marina South Pier",
+        "code": "NS28",
+        "color": "red",
+        "line": "North South"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8628203,
+          1.2714463
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Bishan",
+        "code": "CC15 NS17",
+        "color": "orange",
+        "line": "Circle"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8490389,
+          1.3509891
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Braddell",
+        "code": "NS18",
+        "color": "red",
+        "line": "North South"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8469229,
+          1.3403018
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Newton",
+        "code": "DT11 NS21",
+        "color": "blue",
+        "line": "Downtown"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8378403,
+          1.3130638
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Loyang",
+        "code": "Loyang",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.9720373,
+          1.3714803
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Pasir Ris East",
+        "code": "Pasir Ris East",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.960534,
+          1.3670709
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Tampines North",
+        "code": "Tampines North",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.9381213,
+          1.3693637
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Dhoby Ghaut",
+        "code": "CC1 NS24 NE6",
+        "color": "orange",
+        "line": "Circle"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8455539,
+          1.2996015
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Rochor",
+        "code": "DT13",
+        "color": "blue",
+        "line": "Downtown"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8524654,
+          1.3039433
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Jalan Besar",
+        "code": "DT22",
+        "color": "blue",
+        "line": "Downtown"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8555634,
+          1.3053738
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Bukit Panjang",
+        "code": "DT1 BP6",
+        "color": "blue",
+        "line": "Downtown"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7615337,
+          1.3791013
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Holland Village",
+        "code": "CC21",
+        "color": "orange",
+        "line": "Circle"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7964104,
+          1.3117308
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Farrer Road",
+        "code": "CC20",
+        "color": "orange",
+        "line": "Circle"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8074893,
+          1.3174554
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Botanic Gardens",
+        "code": "DT9 CC19",
+        "color": "blue",
+        "line": "Downtown"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8156468,
+          1.3221033
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Tiong Bahru",
+        "code": "EW17",
+        "color": "green",
+        "line": "East West"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8269565,
+          1.2861318
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Raffles Place",
+        "code": "EW14 NS26",
+        "color": "green",
+        "line": "East West"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8517605,
+          1.2834767
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Bugis",
+        "code": "DT14 EW12",
+        "color": "blue",
+        "line": "Downtown"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8562753,
+          1.2999465
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Little India",
+        "code": "DT12 NE7",
+        "color": "blue",
+        "line": "Downtown"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8491743,
+          1.3068795
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Farrer Park",
+        "code": "NE8",
+        "color": "purple",
+        "line": "North East"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8543375,
+          1.3124898
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Boon Keng",
+        "code": "NE9",
+        "color": "purple",
+        "line": "North East"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8615549,
+          1.3191325
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lavender",
+        "code": "EW11",
+        "color": "green",
+        "line": "East West"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8627743,
+          1.3073608
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Downtown",
+        "code": "DT17",
+        "color": "blue",
+        "line": "Downtown"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8527907,
+          1.2795107
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Chinatown",
+        "code": "DT19 NE4",
+        "color": "blue",
+        "line": "Downtown"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8441354,
+          1.2846877
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Clarke Quay",
+        "code": "NE5",
+        "color": "purple",
+        "line": "North East"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8465975,
+          1.2882602
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "City Hall",
+        "code": "EW13 NS25",
+        "color": "green",
+        "line": "East West"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8526183,
+          1.2930474
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Telok Ayer",
+        "code": "DT18",
+        "color": "blue",
+        "line": "Downtown"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8482749,
+          1.2823549
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Bayfront",
+        "code": "DT16 CE1",
+        "color": "blue",
+        "line": "Downtown"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8596807,
+          1.2826023
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Potong Pasir",
+        "code": "NE10",
+        "color": "purple",
+        "line": "North East"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8690386,
+          1.3314333
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Woodleigh",
+        "code": "NE11",
+        "color": "purple",
+        "line": "North East"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8707517,
+          1.3392017
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Serangoon",
+        "code": "CC13 NE12",
+        "color": "orange",
+        "line": "Circle"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8726779,
+          1.3498065
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Kovan",
+        "code": "NE13",
+        "color": "purple",
+        "line": "North East"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8850002,
+          1.3602101
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Bartley",
+        "code": "CC12",
+        "color": "orange",
+        "line": "Circle"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8797036,
+          1.3429074
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Dakota",
+        "code": "CC8",
+        "color": "orange",
+        "line": "Circle"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8886155,
+          1.3084315
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Pasir Panjang",
+        "code": "CC26",
+        "color": "orange",
+        "line": "Circle"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7913536,
+          1.2761997
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Cashew",
+        "code": "DT2",
+        "color": "blue",
+        "line": "Downtown"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7647302,
+          1.3693605
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Hillview",
+        "code": "DT3",
+        "color": "blue",
+        "line": "Downtown"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7674628,
+          1.3623489
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Beauty World",
+        "code": "DT5",
+        "color": "blue",
+        "line": "Downtown"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7758776,
+          1.3410913
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Tan Kah Kee",
+        "code": "DT8",
+        "color": "blue",
+        "line": "Downtown"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8072601,
+          1.3259029
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Fort Canning",
+        "code": "DT20",
+        "color": "blue",
+        "line": "Downtown"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8443455,
+          1.2924885
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Novena",
+        "code": "NS20",
+        "color": "red",
+        "line": "North South"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8438709,
+          1.3205156
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Toa Payoh",
+        "code": "NS19",
+        "color": "red",
+        "line": "North South"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8471407,
+          1.332617
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Bras Basah",
+        "code": "CC2",
+        "color": "orange",
+        "line": "Circle"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8508947,
+          1.2968762
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Soo Teck",
+        "code": "PW7",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8972682,
+          1.4053322
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Sumang",
+        "code": "PW6",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8985641,
+          1.4084614
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Nibong",
+        "code": "PW5",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.9003529,
+          1.4118607
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Sam Kee",
+        "code": "PW1",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.9048838,
+          1.4097175
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Damai",
+        "code": "PE7",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.9086177,
+          1.4052407
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Oasis",
+        "code": "PE6",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.9127339,
+          1.4022903
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Kadaloor",
+        "code": "PE5",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.916508,
+          1.3995492
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Riviera",
+        "code": "PE4",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.91615,
+          1.394546
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Coral Edge",
+        "code": "PE3",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.9126668,
+          1.3938496
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Meridian",
+        "code": "PE2",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.9088833,
+          1.3969373
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Cove",
+        "code": "PE1",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.9058025,
+          1.3994614
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Somerset",
+        "code": "NS23",
+        "color": "red",
+        "line": "North South"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.839134,
+          1.3003304
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Buangkok",
+        "code": "NE15",
+        "color": "purple",
+        "line": "North East"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8931346,
+          1.3829743
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Buona Vista",
+        "code": "CC22 EW21",
+        "color": "orange",
+        "line": "Circle"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.790345,
+          1.3066258
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Paya Lebar",
+        "code": "CC9 EW8",
+        "color": "orange",
+        "line": "Circle"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8926569,
+          1.3174981
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Esplanade",
+        "code": "CC3",
+        "color": "orange",
+        "line": "Circle"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8555276,
+          1.2934413
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Promenade",
+        "code": "DT15 CC4",
+        "color": "blue",
+        "line": "Downtown"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8605649,
+          1.2931139
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Nicoll Highway",
+        "code": "CC5",
+        "color": "orange",
+        "line": "Circle"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8638662,
+          1.299838
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Mountbatten",
+        "code": "CC7",
+        "color": "orange",
+        "line": "Circle"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8824425,
+          1.3063929
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Tai Seng",
+        "code": "CC11",
+        "color": "orange",
+        "line": "Circle"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8882093,
+          1.335401
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lorong Chuan",
+        "code": "CC14",
+        "color": "orange",
+        "line": "Circle"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8639545,
+          1.3515428
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Marymount",
+        "code": "CC16",
+        "color": "orange",
+        "line": "Circle"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8395447,
+          1.3486303
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "one-north",
+        "code": "CC23",
+        "color": "orange",
+        "line": "Circle"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7873872,
+          1.2996498
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Kent Ridge",
+        "code": "CC24",
+        "color": "orange",
+        "line": "Circle"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7846807,
+          1.2932604
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Haw Par Villa",
+        "code": "CC25",
+        "color": "orange",
+        "line": "Circle"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7818531,
+          1.2826782
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Labrador Park",
+        "code": "CC27",
+        "color": "orange",
+        "line": "Circle"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8029947,
+          1.2722512
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Telok Blangah",
+        "code": "CC28",
+        "color": "orange",
+        "line": "Circle"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8098738,
+          1.2708897
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Sengkang",
+        "code": "NE16 STC",
+        "color": "purple",
+        "line": "North East"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8954828,
+          1.3916988
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "King Albert Park",
+        "code": "DT6",
+        "color": "blue",
+        "line": "Downtown"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7838261,
+          1.3356633
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Sixth Avenue",
+        "code": "DT7",
+        "color": "blue",
+        "line": "Downtown"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7972459,
+          1.331095
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Bencoolen",
+        "code": "DT21",
+        "color": "blue",
+        "line": "Downtown"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8502804,
+          1.2985197
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aviation Park",
+        "code": "Aviation Park",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          104.0035168,
+          1.3701715
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Pasir Ris",
+        "code": "EW1",
+        "color": "green",
+        "line": "East West"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.9494734,
+          1.3712899
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Defu",
+        "code": "Defu",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8990153,
+          1.3623844
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Serangoon North",
+        "code": "Serangoon North",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8740841,
+          1.3704321
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Tavistock",
+        "code": "Tavistock",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8635875,
+          1.3700755
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Ang Mo Kio",
+        "code": "NS16",
+        "color": "red",
+        "line": "North South"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.850883,
+          1.3691873
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Teck Ghee",
+        "code": "Teck Ghee",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8434457,
+          1.3655557
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Tanjong Katong",
+        "code": "TE25",
+        "color": "brown",
+        "line": "Thomson–East Coast"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8973782,
+          1.2995936
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Fort Canning",
+        "code": "DT20",
+        "color": "blue",
+        "line": "Downtown"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8444537,
+          1.292842
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Keppel",
+        "code": "CC30",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.830708,
+          1.2704618
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Cantonment",
+        "code": "CC31",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8370618,
+          1.2731071
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Prince Edward Road",
+        "code": "CC32",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8470995,
+          1.273286
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Bukit Brown",
+        "code": "CC18",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8306792,
+          1.3337476
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Turf City",
+        "code": "CR14",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7942518,
+          1.3409016
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Jurong Lake District",
+        "code": "CR19",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7396327,
+          1.3270799
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "King Albert Park",
+        "code": "DT6",
+        "color": "blue",
+        "line": "Downtown"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7827916,
+          1.3341264
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Maju",
+        "code": "CR16",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7766813,
+          1.3281232
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Clementi",
+        "code": "EW23",
+        "color": "green",
+        "line": "East West"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7659042,
+          1.3161343
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "West Coast",
+        "code": "CR18",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.75809,
+          1.3105397
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Woodlands North",
+        "code": "TE1 RTS",
+        "color": "brown",
+        "line": "Thomson–East Coast"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7866218,
+          1.4478101
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Punggol",
+        "code": "NE17 PTC",
+        "color": "purple",
+        "line": "North East"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.9026401,
+          1.4053834
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Riviera",
+        "code": "Riviera",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.9155071,
+          1.3958354
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Elias",
+        "code": "Elias",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.9393552,
+          1.383189
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Hume",
+        "code": "DT4",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.7691242,
+          1.3544682
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Tanah Merah",
+        "code": "EW4 CG",
+        "color": "green",
+        "line": "East West"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.946592,
+          1.3272044
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Gul Circle",
+        "code": "EW30",
+        "color": "green",
+        "line": "East West"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.6614338,
+          1.3172057
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Outram Park",
+        "code": "TE17 EW16 NE3",
+        "color": "brown",
+        "line": "Thomson–East Coast"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8392552,
+          1.2806944
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Hougang",
+        "code": "NE14",
+        "color": "purple",
+        "line": "North East"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8912425,
+          1.3707784
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Xilin",
+        "code": "DT36",
+        "color": "gray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.9648995,
+          1.3286564
+        ]
+      }
+    }
+  ]
+}

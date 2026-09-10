@@ -1,0 +1,18 @@
+{
+  "value": [
+    {
+      "BusStopCode": "28009",
+      "RoadName": "Jurong Gateway Rd",
+      "Description": "Jurong East Int",
+      "Latitude": 1.3331,
+      "Longitude": 103.7422
+    },
+    {
+      "BusStopCode": "17171",
+      "RoadName": "Clementi Ave 3",
+      "Description": "Clementi Int",
+      "Latitude": 1.3150,
+      "Longitude": 103.7650
+    }
+  ]
+}

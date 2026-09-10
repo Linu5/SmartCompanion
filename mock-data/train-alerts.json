@@ -1,0 +1,22 @@
+{
+  "odata.metadata": "https://datamall2.mytransport.sg/ltaodataservice/$metadata#TrainServiceAlerts",
+  "value": {
+    "Status": 2,
+    "AffectedSegments": [
+      {
+        "Line": "EWL",
+        "Direction": "Both",
+        "Stations": "EW24,EW23,EW22",
+        "FreePublicBus": "Jurong East to Clementi",
+        "FreeMRTShuttle": "Jurong East to Clementi",
+        "MRTShuttleDirection": "Both"
+      }
+    ],
+    "Message": [
+      {
+        "Content": "Train service between Jurong East and Clementi is disrupted due to a track fault. Free bridging bus services are available.",
+        "CreatedDate": "2026-09-10 16:00:00"
+      }
+    ]
+  }
+}

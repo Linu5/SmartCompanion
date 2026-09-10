@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Commuter Companion - RailPulse Sentinel</title>
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body style="display: flex; flex-direction: column; height: 100vh; margin: 0;">
+
+    <!-- Live Alert Banner (Now in a dedicated header area) -->
+    <div id="alert-banner" class="hidden" style="flex-shrink: 0; width: 100%; border-bottom: 1px solid #333; background: #1e1e1e; z-index: 2000; position: relative; max-width: none; border-left: none; top: 0; left: 0; transform: none; border-radius: 0;">
+        <div class="alert-header" id="alert-header-text" style="display: flex; justify-content: space-between; align-items: center; cursor: pointer; padding: 10px 15px;">
+            <span style="font-weight: bold;">⚠️ MRT Service Info</span>
+            <span id="alert-toggle-icon">▼</span>
+        </div>
+        <div class="alert-body" id="alert-body-container" style="padding: 15px;">
+            <div id="alert-content">Loading alerts...</div>
+            <button id="find-route-btn" class="hidden action-btn" style="width: auto; margin-top: 10px;">Find Alternate Route</button>
+        </div>
+    </div>
+
+    <!-- Main content wrapper -->
+    <div style="flex-grow: 1; width: 100%; position: relative; display: flex;">
+        <!-- Map container -->
+        <div id="map" style="flex-grow: 1; width: 100%;"></div>
+
+        <!-- Map Legend -->
+        <div id="map-legend" style="position: absolute; bottom: 20px; left: 20px; z-index: 1000; background: rgba(30, 30, 30, 0.9); padding: 10px; border-radius: 8px; border: 1px solid #444; pointer-events: none;">
+            <div style="font-weight: bold; margin-bottom: 8px; font-size: 13px;">MRT Lines</div>
+            <div id="legend-content"></div>
+        </div>
+
+        <!-- My Route Personalization Panel -->
+        <div id="route-panel">
+            <div class="panel-header">🗺️ My Route</div>
+            <div class="panel-body">
+                <div class="input-group">
+                    <label for="origin-select">Origin Station:</label>
+                    <select id="origin-select">
+                        <option value="">Select origin...</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="dest-select">Destination Station:</label>
+                    <select id="dest-select">
+                        <option value="">Select destination...</option>
+                    </select>
+                </div>
+                <div style="display: flex; gap: 5px; margin-top: 10px;">
+                    <button id="plan-route-btn" class="action-btn" style="background-color: #1976d2; flex: 1; margin: 0;">Plan Route</button>
+                    <button id="clear-route-btn" class="action-btn" style="background-color: #555; flex: 1; margin: 0;">Clear</button>
+                </div>
+                <div id="route-results" class="hidden" style="margin-top: 15px; border-top: 1px solid #333; padding-top: 10px;">
+                    <!-- Route options injected by JS -->
+                </div>
+
+                <!-- Bus Timing Section -->
+                <div style="margin-top: 15px; border-top: 1px solid #333; padding-top: 10px;">
+                    <div class="input-group">
+                        <label for="bus-stop-input">Live Bus Timings (Stop Code):</label>
+                        <div style="display: flex; gap: 5px;">
+                            <input type="text" id="bus-stop-input" placeholder="e.g. 01012" style="flex: 1; padding: 8px; background: #2c2c2c; border: 1px solid #444; color: white; border-radius: 4px;">
+                            <button id="search-bus-btn" style="background: #4caf50; color: white; border: none; border-radius: 4px; padding: 0 12px; cursor: pointer;">🔍</button>
+                        </div>
+                    </div>
+                    <div id="bus-results" class="hidden" style="margin-top: 10px; font-size: 13px;">
+                        <!-- Bus timing results injected here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Proactive Suggestion / ETA Comparison Panel -->
+        <div id="suggestion-panel" class="hidden">
+            <div class="panel-header">⚡ Decision Support</div>
+            <div id="suggestion-content" class="panel-body">
+                <!-- Content injected by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script src="/app.js"></script>
+</body>
+</html>

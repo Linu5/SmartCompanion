@@ -1,0 +1,178 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #121212;
+    color: #e0e0e0;
+}
+
+#map {
+    height: 100%;
+    width: 100%;
+    z-index: 1;
+}
+
+/* Clever CSS trick to make standard OpenStreetMap tiles dark */
+.leaflet-tile-pane {
+    filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Floating panels styling */
+#route-panel, #suggestion-panel {
+    position: absolute;
+    z-index: 1000;
+    background: rgba(30, 30, 30, 0.95);
+    border: 1px solid #333;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    backdrop-filter: blur(5px);
+}
+
+/* My Route Panel */
+#route-panel {
+    top: 20px;
+    left: 20px;
+    width: 340px;
+    border-top: 5px solid #1976d2; /* Blue */
+}
+
+.input-group {
+    margin-bottom: 10px;
+}
+.input-group:last-child { margin-bottom: 0; }
+.input-group label {
+    display: block;
+    font-size: 12px;
+    color: #aaa;
+    margin-bottom: 4px;
+}
+.input-group select {
+    width: 100%;
+    padding: 8px;
+    background: #2c2c2c;
+    border: 1px solid #444;
+    color: white;
+    border-radius: 4px;
+}
+
+/* Alert Banner */
+.alert-banner-severe { border-left: 5px solid #d32f2f; }
+.alert-banner-info { border-left: 5px solid #1976d2; }
+
+.alert-header {
+    padding: 10px 15px;
+    font-weight: bold;
+    border-bottom: 1px solid #333;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+.header-severe { background: rgba(211, 47, 47, 0.1); color: #ff5252; }
+.header-info { background: rgba(25, 118, 210, 0.1); color: #64b5f6; }
+
+.alert-body {
+    padding: 15px;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.action-btn {
+    margin-top: 15px;
+    background-color: #ff5252;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    width: 100%;
+    transition: background 0.2s;
+}
+.action-btn:hover { background-color: #d32f2f; }
+
+/* Suggestion Panel */
+#suggestion-panel {
+    top: 150px;
+    right: 20px;
+    width: 360px;
+    border-top: 5px solid #4caf50;
+}
+
+.panel-header {
+    background: rgba(255, 255, 255, 0.05);
+    color: #fff;
+    padding: 10px 15px;
+    font-weight: bold;
+    border-bottom: 1px solid #333;
+}
+
+.panel-body {
+    padding: 15px;
+    font-size: 14px;
+}
+
+/* ETA Comparison Card */
+.eta-card {
+    background: #2c2c2c;
+    border-radius: 6px;
+    margin-bottom: 15px;
+    overflow: hidden;
+    border: 1px solid #444;
+}
+.eta-card-header {
+    padding: 8px 12px;
+    font-weight: bold;
+    font-size: 13px;
+    text-transform: uppercase;
+}
+.eta-mrt { background: rgba(211, 47, 47, 0.1); border-bottom: 1px solid #444; }
+.eta-bus { background: rgba(76, 175, 80, 0.1); }
+
+.eta-content {
+    padding: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.eta-time { font-size: 20px; font-weight: bold; }
+.eta-time.delayed { color: #ff5252; }
+.eta-time.fast { color: #81c784; }
+
+/* Crowding Indicator */
+.crowd-badge {
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-weight: bold;
+    display: inline-block;
+    margin-top: 4px;
+}
+.crowd-high { background: rgba(211, 47, 47, 0.2); color: #ff5252; }
+.crowd-low { background: rgba(76, 175, 80, 0.2); color: #81c784; }
+
+/* Custom map marker style for disruption */
+.disrupted-station {
+    background-color: #d32f2f;
+    border: 2px solid white;
+    border-radius: 50%;
+    width: 14px;
+    height: 14px;
+    display: inline-block;
+    box-shadow: 0 0 8px #d32f2f;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(211, 47, 47, 0.7); }
+    70% { box-shadow: 0 0 0 10px rgba(211, 47, 47, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(211, 47, 47, 0); }
+}
+
+.route-glow {
+    filter: drop-shadow(0 0 5px #fff) drop-shadow(0 0 10px #4caf50);
+}
