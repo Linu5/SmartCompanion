@@ -7,7 +7,9 @@ let mode = 'train', activeJourney = null, requestVersion = 0, journeyBusy = fals
 let stationMap = new Map(), lastJourney = null, networkMeta = null;
 let map, markerLayer, trailLayer, mapRoute = null, networkLegend = '';
 let currentView = 'plan', panelPage = 'planner';
-const phoneLayout = window.matchMedia('(max-width: 800px)');
+let stationPickerTarget = null;
+const panelPositions = new Map();
+const phoneLayout = window.matchMedia('(max-width: 800px), (max-width: 1000px) and (max-height: 500px)');
 const lineColors = { NSL: '#ed675c', EWL: '#57be88', CGL: '#57be88', NEL: '#b28dd8', CCL: '#efb540', DTL: '#559fee', TEL: '#b99978', BPL: '#9bbbaa', SLRT: '#9bbbaa', PLRT: '#9bbbaa' };
 
 function setTheme(theme) {
@@ -22,7 +24,7 @@ function setTheme(theme) {
 function syncShell() {
     document.body.dataset.view = currentView;
     document.body.dataset.panel = panelPage;
-    $('panel-heading').textContent = currentView === 'buses' ? 'AT THE BUS STOP' : panelPage === 'results' ? 'YOUR JOURNEY OPTIONS' : 'YOUR JOURNEY';
+    $('panel-heading').textContent = currentView === 'buses' ? 'AT THE BUS STOP' : 'YOUR JOURNEY';
     $('edit-journey').classList.toggle('hidden', currentView !== 'plan' || panelPage !== 'results');
     $('map-open-label').textContent = lastJourney ? 'View my journey' : 'Plan a journey';
     for (const view of ['plan', 'map', 'buses']) {
@@ -30,22 +32,56 @@ function syncShell() {
         $(`view-${view}`).setAttribute('aria-pressed', String(currentView === view));
     }
 }
-function setView(view, results = false) {
+function setView(view, results = Boolean(lastJourney)) {
+    panelPositions.set(`${currentView}:${panelPage}`, $('panel-scroll').scrollTop);
     currentView = view;
     if (view === 'plan') panelPage = results && lastJourney ? 'results' : 'planner';
     // The standalone bus tab is independent of the train-only journey filter.
     if (view === 'buses') panelPage = 'planner';
     syncShell();
-    $('panel-scroll').scrollTop = 0;
+    $('panel-scroll').scrollTop = panelPositions.get(`${currentView}:${panelPage}`) || 0;
     if (!document.activeElement.getClientRects().length) $(`view-${view}`).focus({ preventScroll: true });
     requestAnimationFrame(() => { map?.invalidateSize(); fitMapRoute(); });
 }
-function setSheetExpanded(expanded) {
-    document.body.dataset.sheet = expanded ? 'expanded' : 'peek';
-    $('sheet-expand').setAttribute('aria-expanded', String(expanded));
-    $('sheet-expand').setAttribute('aria-label', `${expanded ? 'Collapse' : 'Expand'} panel`);
-    $('sheet-expand-label').textContent = expanded ? 'Collapse' : 'Expand';
-    requestAnimationFrame(fitMapRoute);
+function syncStationPickers() {
+    for (const field of ['origin', 'dest']) {
+        const select = $(`${field}-select`);
+        const station = stationMap.get(select.value);
+        $(`${field}-picker`).disabled = select.disabled;
+        $(`${field}-picker-value`).textContent = station ? station.name : select.disabled ? 'Loading stations…' : 'Choose a station';
+        $(`${field}-picker`).classList.toggle('has-value', Boolean(station));
+    }
+}
+function renderStationPicker() {
+    const query = $('station-search').value.trim().toLowerCase().replace(/\s+/g, ' ');
+    const stations = [...stationMap.values()].filter(station => `${station.name} ${station.codes.join(' ')}`.toLowerCase().includes(query));
+    $('station-picker-count').textContent = stations.length ? `${stations.length} ${stations.length === 1 ? 'station' : 'stations'}${query ? ' found' : ' · search by name or code'}` : 'No stations found. Try another name or code.';
+    $('station-picker-results').innerHTML = stations.map(station => `<li><button type="button" data-station-id="${escapeHtml(station.id)}"><span>${escapeHtml(station.name)}<small>${escapeHtml(station.codes.join(' · '))}</small></span><span aria-hidden="true">${$(stationPickerTarget).value === station.id ? '✓' : '↗'}</span></button></li>`).join('');
+    $('station-picker-results').scrollTop = 0;
+}
+function openStationPicker(field) {
+    stationPickerTarget = `${field}-select`;
+    $('station-picker-title').textContent = field === 'origin' ? 'Where from?' : 'Where to?';
+    $('station-search').value = '';
+    renderStationPicker();
+    $('station-picker').showModal();
+    $('station-search').focus({ preventScroll: true });
+}
+function chooseStation(id) {
+    if (!stationMap.has(id) || !stationPickerTarget) return;
+    const select = $(stationPickerTarget);
+    select.value = id;
+    select.dispatchEvent(new Event('change', { bubbles: true }));
+    $('station-picker').close();
+}
+function syncViewport() {
+    const viewport = window.visualViewport;
+    // Keep the form above mobile keyboards without fighting pinch-to-zoom.
+    if (viewport && viewport.scale !== 1) return;
+    document.documentElement.style.setProperty('--app-height', `${viewport?.height || window.innerHeight}px`);
+    const typing = document.activeElement?.matches('input:not([type="checkbox"]), textarea');
+    document.body.classList.toggle('keyboard-open', phoneLayout.matches && typing && window.innerHeight - (viewport?.height || window.innerHeight) > 120);
+    if (phoneLayout.matches && typing) requestAnimationFrame(() => document.activeElement?.scrollIntoView({ block: 'nearest' }));
 }
 
 async function api(url) {
@@ -76,6 +112,7 @@ async function loadNetwork() {
             $(id).innerHTML = '<option value="">Choose a station…</option>' + data.stations.map(s => `<option value="${escapeHtml(s.id)}">${escapeHtml(s.name)} (${escapeHtml(s.codes.join(' / '))})</option>`).join('');
             $(id).disabled = false;
         }
+        syncStationPickers();
         if (map) {
             const seen = new Set();
             for (const edge of data.segments) {
@@ -153,6 +190,9 @@ function clearJourney() {
     requestVersion++;
     activeJourney = null; lastJourney = null; journeyBusy = false;
     $('origin-select').value = ''; $('dest-select').value = '';
+    syncStationPickers();
+    panelPositions.clear();
+    $('panel-scroll').scrollTop = 0;
     $('bus-origin').value = ''; $('bus-destination').value = '';
     $('route-results').classList.add('hidden'); $('route-results').innerHTML = '';
     $('planner-status').textContent = '';
@@ -183,7 +223,7 @@ async function planJourney(event, refreshing = false) {
         if (version !== requestVersion) return;
         activeJourney = request; lastJourney = data;
         if (!refreshing && currentView === 'plan') {
-            setSheetExpanded(false);
+            panelPositions.delete('plan:results');
             setView('plan', true);
         } else syncShell();
         renderJourney(data, !refreshing);
@@ -219,7 +259,7 @@ function trainCard(train, data) {
         <div class="card-top"><div><h3>${data.affected ? 'Alternative train route' : 'Train journey'}</h3><span class="badge">Timetable</span></div><div class="time"><strong>${train.duration} min</strong><span>scheduled journey</span></div></div>
         <div class="card-body"><p>${train.stops} stops · ${train.transfers} ${train.transfers === 1 ? 'transfer' : 'transfers'}</p><p class="small muted">Depart ${scheduleTime(train.departure)} · arrive ${scheduleTime(train.arrival)} SGT</p>
         ${train.legs.map((leg, i) => `<div class="step"><strong>${escapeHtml(leg.line)} → ${escapeHtml(leg.headsign)}</strong>${name(leg.fromStation)} → ${name(leg.toStation)}<br><small>${scheduleTime(leg.departure)} · platform ${escapeHtml(leg.platform || 'not supplied')} · ${leg.stops} stops${i ? ` · ${train.transferMinutes} min transfer allowance` : ''}</small></div>`).join('')}
-        <details><summary>Station crowd levels</summary><p class="small muted">Crowding at stations, not inside carriages.</p>${crowds || '<p>Unavailable</p>'}</details>
+        <details data-journey-details="crowd"><summary>Station crowd levels</summary><p class="small muted">Crowding at stations, not inside carriages.</p>${crowds || '<p>Unavailable</p>'}</details>
         <p class="small muted">LTA timetable · downloaded ${time(data.timetable.updatedAt)}${data.timetable.stale ? ' · old cached timetable' : ''}. Actual train arrival may differ.</p>
         <div class="card-actions"><button class="secondary" data-show-train>Show on map</button></div></div>
     </article>`;
@@ -262,6 +302,7 @@ function accessibilityNotes(data) {
 function renderJourney(data, fit) {
     renderAlerts(data.alerts);
     const results = $('route-results');
+    const detailStates = new Map([...results.querySelectorAll('[data-journey-details]')].map(detail => [detail.dataset.journeyDetails, detail.open]));
     results.classList.remove('hidden');
     const trainOnly = data.mode === 'train-only';
     const bestBus = data.buses.options.find(option => option.available);
@@ -289,10 +330,13 @@ function renderJourney(data, fit) {
         ${accessibilityNotes(data)}
         ${!data.alerts || data.alerts.meta?.stale || data.noDetailedDisruption ? '<div class="recommendation warning">Current disruption details could not be confirmed. Check operator announcements before travelling.</div>' : ''}
         ${data.timetable?.stale || data.buses.stale ? '<div class="recommendation warning">Some route or timetable data is cached because its refresh failed.</div>' : ''}
-        ${relevant.length ? `<details class="recommendation warning" open><summary>Advisories to check for this journey</summary>${relevant.map(m => `<p>${escapeHtml(m.Content)}</p>`).join('')}</details>` : ''}
+        ${relevant.length ? `<details class="recommendation warning" data-journey-details="advisories" open><summary>Advisories to check for this journey</summary>${relevant.map(m => `<p>${escapeHtml(m.Content)}</p>`).join('')}</details>` : ''}
         ${data.train ? trainCard(data.train, data) : ''}
         ${trainOnly ? '' : `<h3>Direct bus options</h3>${data.buses.error ? `<p class="error">${escapeHtml(data.buses.error)}</p>` : data.buses.options.length ? data.buses.options.map(busCard).join('') : `<p class="muted small">${data.accessibility?.requested ? 'No matching direct bus arrival with wheelchair access confirmed in the current response.' : data.mode === 'train' ? `No direct bus found within an estimated ${data.buses.radius} m walk at each end.` : 'No direct service found between these two stops.'} Bus transfers are not included.</p>`}
         <p class="small muted">${data.buses.updatedAt ? `Bus routes downloaded ${time(data.buses.updatedAt)} · ` : ''}Compare estimates with care; delays, diversions and walking conditions can change your journey.</p>`}`;
+    if (!fit) for (const detail of results.querySelectorAll('[data-journey-details]')) {
+        if (detailStates.has(detail.dataset.journeyDetails)) detail.open = detailStates.get(detail.dataset.journeyDetails);
+    }
     const selectedBus = !fit && mapRoute?.kind === 'bus' ? data.buses.options.find(option => busMapKey(option) === mapRoute.key) : null;
     if (selectedBus) showBus(selectedBus, fit);
     else if (data.train) showTrain(data.train, fit);
@@ -311,7 +355,7 @@ function resetMapRoute() {
     syncShell();
 }
 function fitMapRoute() {
-    if (!map) return;
+    if (!map || (phoneLayout.matches && currentView !== 'map')) return;
     const sidebar = document.querySelector('.sidebar');
     const panelVisible = currentView !== 'map';
     const size = map.getSize();
@@ -418,12 +462,13 @@ async function searchBus(event, refresh = false) {
             <p class="small muted">Crowd levels use LTA’s seat / standing availability for each bus. They may change before boarding.</p>
             ${data.meta.wheelchairOnly ? '<p class="small muted">Wheelchair-equipped buses only. Stop access and wheelchair-bay space are not confirmed.</p>' : ''}
             ${data.meta.stale ? '<p class="error">Cached response — arrivals could not be refreshed. Times below may be out of date.</p>' : ''}
-            ${services.length ? services.map(service => `<div class="bus-row"><div class="bus-row-heading"><span class="bus-number">${escapeHtml(service.ServiceNo)}</span><span class="muted">Next three buses</span></div><div class="bus-times">${['NextBus', 'NextBus2', 'NextBus3'].map(key => {
+            ${services.length ? services.map(service => `<div class="bus-row"><div class="bus-row-heading"><span class="bus-number">${escapeHtml(service.ServiceNo)}</span><span class="muted">Next three buses</span></div><div class="bus-times">${['NextBus', 'NextBus2', 'NextBus3'].map((key, index) => {
                 const bus = service[key];
-                if (!bus?.EstimatedArrival) return `<div><strong>—</strong><small>${data.meta.wheelchairOnly ? 'No confirmed wheelchair arrival' : 'No prediction'}</small></div>`;
+                const order = ['Next bus', '2nd bus', '3rd bus'][index];
+                if (!bus?.EstimatedArrival) return `<div class="bus-arrival no-prediction"><div class="arrival-time"><small>${order}</small><strong>—</strong></div><p class="small muted">${data.meta.wheelchairOnly ? 'No confirmed wheelchair arrival' : 'No prediction'}</p></div>`;
                 const mins = Math.ceil((Date.parse(bus.EstimatedArrival) - Date.now()) / 60000);
                 const type = ({ SD: 'Single deck', DD: 'Double deck', BD: 'Bendy' })[bus.Type] || 'Type unavailable';
-                return `<div><strong>${mins < 0 ? 'Passed' : mins === 0 ? 'Arriving' : `${mins} min`}</strong><small>${time(bus.EstimatedArrival)}</small><small>${type}</small>${busCrowd(bus.Load, data.meta.stale || mins < 0)}<small>${Number(bus.Monitored) === 1 ? 'Live prediction' : 'Scheduled'}${bus.Feature === 'WAB' ? ' · Wheelchair bus' : ''}</small></div>`;
+                return `<div class="bus-arrival"><div class="arrival-time"><small>${order}</small><strong>${mins < 0 ? 'Passed' : mins === 0 ? 'Arriving' : `${mins} min`}</strong><small>${time(bus.EstimatedArrival)}</small></div>${busCrowd(bus.Load, data.meta.stale || mins < 0)}<div class="arrival-details"><small>${type} · ${Number(bus.Monitored) === 1 ? 'Live prediction' : 'Scheduled'}${bus.Feature === 'WAB' ? ' · Wheelchair bus' : ''}</small></div></div>`;
             }).join('')}</div></div>`).join('') : `<p class="muted">${data.meta.wheelchairOnly ? 'No upcoming bus arrivals with wheelchair access confirmed in this response.' : 'No arrivals reported. Services may not be operating at this time.'}</p>`}`;
     } catch (error) { if (version === busVersion) $('bus-results').textContent = error.message; }
 }
@@ -441,18 +486,42 @@ $('bus-wheelchair-access').addEventListener('change', () => {
 $('fit-route-btn').addEventListener('click', fitMapRoute);
 $('theme-toggle').addEventListener('click', () => setTheme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'));
 for (const view of ['plan', 'map', 'buses']) $(`view-${view}`).addEventListener('click', () => setView(view));
-$('edit-journey').addEventListener('click', () => { setView('plan'); requestAnimationFrame(() => $('planner-section').focus({ preventScroll: true })); });
+$('edit-journey').addEventListener('click', () => { setView('plan', false); $('panel-scroll').scrollTop = 0; requestAnimationFrame(() => $('planner-section').focus({ preventScroll: true })); });
 $('map-open-planner').addEventListener('click', () => setView('plan', Boolean(lastJourney)));
-$('sheet-expand').addEventListener('click', () => setSheetExpanded(document.body.dataset.sheet !== 'expanded'));
-document.querySelector('.skip-link').addEventListener('click', () => { setView('plan'); setSheetExpanded(true); });
-phoneLayout.addEventListener('change', () => requestAnimationFrame(() => { map?.invalidateSize(); fitMapRoute(); }));
-// Keep the form usable when the on-screen keyboard leaves little map space.
-for (const input of document.querySelectorAll('input,select')) input.addEventListener('focus', () => {
-    if (phoneLayout.matches && input.closest('.sidebar')) setSheetExpanded(true);
+$('panel-map-button').addEventListener('click', () => setView('map'));
+document.querySelector('.skip-link').addEventListener('click', () => setView('plan', false));
+phoneLayout.addEventListener('change', () => requestAnimationFrame(() => { syncViewport(); map?.invalidateSize(); fitMapRoute(); }));
+window.visualViewport?.addEventListener('resize', syncViewport);
+window.addEventListener('resize', syncViewport);
+document.addEventListener('focusin', syncViewport);
+document.addEventListener('focusout', () => requestAnimationFrame(syncViewport));
+for (const field of ['origin', 'dest']) {
+    $(`${field}-picker`).addEventListener('click', () => openStationPicker(field));
+    $(`${field}-label`).addEventListener('click', event => {
+        if (phoneLayout.matches && !$(`${field}-picker`).disabled) { event.preventDefault(); openStationPicker(field); }
+    });
+}
+$('station-search').addEventListener('input', renderStationPicker);
+$('station-search-form').addEventListener('submit', event => {
+    event.preventDefault();
+    const options = $('station-picker-results').querySelectorAll('button');
+    if (options.length === 1) chooseStation(options[0].dataset.stationId);
+});
+$('station-picker-results').addEventListener('click', event => {
+    const button = event.target.closest('[data-station-id]');
+    if (button) chooseStation(button.dataset.stationId);
+});
+$('station-picker-close').addEventListener('click', () => $('station-picker').close());
+$('station-picker').addEventListener('close', () => {
+    const trigger = $(stationPickerTarget?.replace('-select', '-picker'));
+    if (trigger?.getClientRects().length) trigger.focus({ preventScroll: true });
+    else if (stationPickerTarget) $(stationPickerTarget).focus({ preventScroll: true });
+    syncViewport();
 });
 for (const id of ['origin-select', 'dest-select', 'bus-origin', 'bus-destination', 'preference', 'wheelchair-access', 'transfer-minutes']) {
     $(id).addEventListener('change', () => {
         updateAccessControls();
+        syncStationPickers();
         requestVersion++; activeJourney = null; lastJourney = null; journeyBusy = false;
         $('plan-route-btn').disabled = false;
         $('route-results').classList.add('hidden');
@@ -479,6 +548,7 @@ installStopSearch('bus-stop-input', 'bus-search-options');
 let initialTheme = 'light';
 try { initialTheme = localStorage.getItem('railpulse-theme') || 'light'; } catch { /* Use the default theme. */ }
 setTheme(initialTheme);
+syncViewport();
 syncShell();
 initialiseMap();
 loadNetwork();

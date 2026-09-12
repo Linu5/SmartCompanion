@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
     <link rel="stylesheet" href="/style.css">
 </head>
-<body data-view="plan" data-panel="planner" data-sheet="peek">
+<body data-view="plan" data-panel="planner">
     <a class="skip-link" href="#planner-section">Skip to journey planner</a>
     <header class="app-header">
         <div class="brand"><span class="brand-icon" aria-hidden="true">↗</span><div><strong>RailPulse<span class="brand-dot">.</span></strong><span>Singapore, on the move</span></div></div>
@@ -26,7 +26,7 @@
     </details>
     <main>
         <aside class="sidebar" aria-label="Journey planner">
-            <div class="sheet-toolbar"><span id="panel-heading">YOUR JOURNEY</span><div><button id="edit-journey" class="text-button hidden" type="button">Edit journey</button><button id="sheet-expand" class="sheet-expand" type="button" aria-label="Expand panel" aria-expanded="false" aria-controls="panel-scroll"><span class="sheet-handle" aria-hidden="true"></span><span id="sheet-expand-label">Expand</span></button></div></div>
+            <div class="sheet-toolbar"><span id="panel-heading">YOUR JOURNEY</span><div><button id="edit-journey" class="text-button hidden" type="button" aria-label="Edit journey">Edit</button><button id="panel-map-button" class="text-button panel-map-button" type="button">View map ↗</button></div></div>
             <div id="planner-status" class="panel-status small muted" role="status"></div>
             <div id="panel-scroll" class="panel-scroll">
             <section id="planner-section" tabindex="-1">
@@ -38,10 +38,12 @@
                 </div>
                 <form id="journey-form">
                     <div id="train-fields" class="location-fields">
-                        <label for="origin-select">From station</label>
+                        <label id="origin-label" for="origin-select">From station</label>
                         <select id="origin-select" disabled><option value="">Loading LTA stations…</option></select>
-                        <label for="dest-select">To station</label>
+                        <button id="origin-picker" class="station-picker-trigger" type="button" disabled aria-haspopup="dialog" aria-controls="station-picker" aria-labelledby="origin-label origin-picker-value"><span id="origin-picker-value">Loading stations…</span><span aria-hidden="true">⌕</span></button>
+                        <label id="dest-label" for="dest-select">To station</label>
                         <select id="dest-select" disabled><option value="">Loading LTA stations…</option></select>
+                        <button id="dest-picker" class="station-picker-trigger" type="button" disabled aria-haspopup="dialog" aria-controls="station-picker" aria-labelledby="dest-label dest-picker-value"><span id="dest-picker-value">Loading stations…</span><span aria-hidden="true">⌕</span></button>
                     </div>
                     <div id="bus-fields" class="location-fields hidden">
                         <label for="bus-origin">From bus stop</label>
@@ -107,6 +109,15 @@
             <button id="map-open-planner" class="map-open-planner" type="button"><span id="map-open-label">Plan a journey</span><span aria-hidden="true">↗</span></button>
         </section>
     </main>
+    <dialog id="station-picker" class="station-dialog" aria-labelledby="station-picker-title">
+        <div class="station-dialog-header"><h2 id="station-picker-title">Choose a station</h2><button id="station-picker-close" type="button" aria-label="Close station search">✕</button></div>
+        <form id="station-search-form" class="station-search-form">
+            <label for="station-search">Search stations</label>
+            <input id="station-search" type="search" placeholder="Station name or code, e.g. Bugis" autocomplete="off" spellcheck="false" enterkeyhint="search">
+        </form>
+        <p id="station-picker-count" class="station-picker-count" role="status"></p>
+        <ul id="station-picker-results" class="station-picker-results" aria-label="Matching stations"></ul>
+    </dialog>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script src="/app.js" defer></script>
 </body>
