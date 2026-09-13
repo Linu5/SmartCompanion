@@ -1,10 +1,10 @@
 -- Read-only checks: paste into Supabase SQL Editor AFTER railpulse-setup.sql.
 -- This does not create users, read saved routes, or modify data.
--- Expect exactly 5 rows, with every check column TRUE.
+-- Expect exactly 6 rows, with every check column TRUE.
 
 with expected(table_name) as (
     values ('railpulse_profiles'), ('railpulse_preferences'),
-           ('railpulse_saved_routes'), ('railpulse_favourite_buses'), ('railpulse_saved_places')
+           ('railpulse_saved_routes'), ('railpulse_favourite_buses'), ('railpulse_saved_places'), ('railpulse_push_subscriptions')
 )
 select
     expected.table_name,
@@ -36,9 +36,12 @@ select
 from pg_catalog.pg_proc p
 where p.oid = pg_catalog.to_regprocedure('public.railpulse_touch_updated_at()');
 
--- Inspect the actual ownership predicates. There should be 20 policy rows.
+-- Inspect the actual ownership predicates. There should be 24 policy rows.
 select tablename, policyname, cmd, roles, qual, with_check
 from pg_catalog.pg_policies
 where schemaname = 'public'
-  and tablename in ('railpulse_profiles', 'railpulse_preferences', 'railpulse_saved_routes', 'railpulse_favourite_buses', 'railpulse_saved_places')
+  and tablename in ('railpulse_profiles', 'railpulse_preferences', 'railpulse_saved_routes', 'railpulse_favourite_buses', 'railpulse_saved_places', 'railpulse_push_subscriptions')
 order by tablename, policyname;
+
+-- Both backend-only tables must have RLS and no browser access.
+select tablename, rowsecurity, not has_table_privilege('authenticated', 'public.'||tablename, 'SELECT,INSERT,UPDATE,DELETE') as client_blocked from pg_tables where schemaname='public' and tablename in ('railpulse_notification_deliveries','railpulse_notification_status');

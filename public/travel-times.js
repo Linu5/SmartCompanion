@@ -44,21 +44,29 @@ function renderTimeComparison(data) {
     const unique = [...new Set(usable.map(slot => slot.crowd.level))];
     const rank = { l: 1, m: 2, h: 3 };
     const quietest = usable.slice().sort((a, b) => rank[a.crowd.level] - rank[b.crowd.level] || Date.parse(a.at) - Date.parse(b.at))[0];
+    const historical = data.slots.filter(slot => slot.train && slot.pattern?.status === 'historical' && slot.pattern.calendarKnown && !data.timetable.stale);
+    const activity = slot => slot.pattern.hours[slot.pattern.hour]?.relative ?? Infinity;
+    const sameForecast = unique.length > 1 ? [] : historical.filter(slot => !usable.length || slot.crowd.status === 'forecast' && slot.crowd.level === unique[0]);
+    const usualQuietest = sameForecast.slice().sort((a, b) => activity(a) - activity(b) || Date.parse(a.at) - Date.parse(b.at))[0];
+    const patternChoice = usualQuietest && Math.max(...sameForecast.map(activity)) - activity(usualQuietest) >= 20 ? usualQuietest : null;
     let insight = 'No usable crowd forecast for these train times. Choose another window or check closer to departure.';
-    if (unique.length === 1) insight = `${crowdNames[unique[0]]} crowd levels across ${usable.length === data.slots.length ? 'these times' : 'the times with available forecasts'}. Choose the departure that suits you.`;
+    if (unique.length === 1) insight = `LTA forecasts ${crowdNames[unique[0]].toLowerCase()} station crowding across ${usable.length === data.slots.length ? 'these times' : 'the available intervals'}. The historical pattern below gives additional context.`;
     if (unique.length > 1) insight = `A quieter option: ${time(quietest.at)} on ${timingDateLabel(quietest.at)} — ${crowdNames[quietest.crowd.level].toLowerCase()} crowd forecast, ${quietest.train.duration} min scheduled journey.`;
+    if (patternChoice) insight += ` ${time(patternChoice.at)} has lower usual station activity within this window, based on ${patternChoice.pattern.month} patterns. This is historical context, not a crowd prediction.`;
     $('timing-results').innerHTML = `<p class="comparison-insight">${escapeHtml(insight)}</p>
         <p class="small muted">Crowds at <strong>${escapeHtml(data.origin.name)}</strong>, not inside carriages. Times start at this station.</p>
-        <div class="time-columns" aria-hidden="true"><span>At station</span><span>Train journey</span><span>Station crowd</span></div>
-        <div class="time-options">${data.slots.map(slot => `<details class="time-option${unique.length > 1 && slot === quietest ? ' quieter' : ''}"><summary>
+        <p class="small muted">Each row separates LTA’s forecast from the usual weekday or weekend pattern. <button type="button" class="text-button" id="timing-pattern-link">See the daily pattern ↓</button></p>
+        <div class="time-columns" aria-hidden="true"><span>At station</span><span>Train journey</span><span>Forecast & usual pattern</span></div>
+        <div class="time-options">${data.slots.map(slot => `<details class="time-option${unique.length > 1 && slot === quietest || slot === patternChoice ? ' quieter' : ''}"><summary>
             <span class="slot-clock"><strong>${time(slot.at)}</strong><small>${timingDateLabel(slot.at)}</small></span>
             <span class="slot-duration"><strong>${slot.train ? `${slot.train.duration} min` : 'No train'}</strong><small>${slot.train ? `Arrive ${time(slot.train.arrivalAt)}${timingDay(slot.train.arrivalAt) !== timingDay(slot.at) ? ` · ${timingDateLabel(slot.train.arrivalAt)}` : ''}` : slot.timetableCovered ? 'None within 3h' : 'Outside timetable'}</small></span>
-            ${crowdPill(slot.crowd)}<span class="slot-more">${unique.length > 1 && slot === quietest ? 'Quieter option · ' : ''}View details <span aria-hidden="true">⌄</span></span></summary>
+            <span class="slot-conditions"><small class="muted">LTA forecast</small>${crowdPill(slot.crowd)}${typeof patternTag === 'function' ? patternTag(slot.pattern) : ''}</span><span class="slot-more">${unique.length > 1 && slot === quietest ? 'Quieter forecast · ' : slot === patternChoice ? 'Lower usual activity · ' : ''}View details <span aria-hidden="true">⌄</span></span></summary>
             <div class="slot-details">${slot.train ? `<p><strong>Be at ${escapeHtml(data.origin.name)} by ${time(slot.at)}.</strong> Scheduled train departure ${time(slot.train.departureAt)}${timingDay(slot.train.departureAt) !== timingDay(slot.at) ? ` on ${timingDateLabel(slot.train.departureAt)}` : ''}.</p><p>${slot.train.stops} ${slot.train.stops === 1 ? 'stop' : 'stops'} · ${slot.train.transfers ? `${slot.train.transfers} ${slot.train.transfers === 1 ? 'transfer' : 'transfers'}` : 'Direct train'} · includes timetable waiting and transfers.</p>
             ${slot.train.transfers ? `<p class="small muted">${slot.train.transferMinutes} min allowed for each train transfer, from your journey preferences.</p>` : ''}
             ${slot.train.legs.map(leg => `<div class="time-leg"><strong>${escapeHtml(leg.line)} → ${escapeHtml(leg.headsign)}</strong><p>${escapeHtml(leg.from)} → ${escapeHtml(leg.to)}</p><small>${time(leg.departureAt)}–${time(leg.arrivalAt)} · platform ${escapeHtml(leg.platform || 'not supplied')}</small></div>`).join('')}` : '<p>No scheduled train journey found in the search window. A low crowd forecast does not mean trains are running.</p>'}
             <p class="small muted">${slot.crowd.level ? `${escapeHtml(slot.crowd.line)} ${escapeHtml(slot.crowd.stationCode)} · LTA forecast for ${time(slot.crowd.intervalStart)}–${time(slot.crowd.intervalEnd)} · retrieved ${time(slot.crowd.retrievedAt)}${slot.crowd.status === 'stale' ? ' · refresh failed' : ''}.` : 'LTA has not supplied a matching forecast for this station and interval.'}</p>
             ${slot.accessibility ? `<p class="small">Wheelchair transfer allowance: ${slot.accessibility.transferMinutes} min. ${slot.accessibility.liftStatus === 'no-reported-maintenance' ? 'No lift maintenance currently reported at the access stations. Future lift access is not confirmed.' : 'Check current lift access with station staff; maintenance information is incomplete, old or reports an outage.'}</p>` : ''}</div></details>`).join('')}</div>
+        ${typeof patternCard === 'function' ? patternCard(data.slots[0]?.pattern, data.origin.name) : ''}
         <p class="timing-footnote">30-minute forecasts from LTA. Train times use the published timetable and current service/lift notices. They exclude travel to the station. Recheck before leaving.</p>
         <div class="current-crowd"><div><strong>Latest reading at ${escapeHtml(data.origin.name)}</strong><small>${data.live.line ? escapeHtml(data.live.line) + ' · ' : ''}${data.live.status === 'live' ? `Reading ${time(data.live.intervalStart)}–${time(data.live.intervalEnd)}` : data.live.status === 'stale' ? `Old reading · ${timingDateLabel(data.live.intervalStart)} ${time(data.live.intervalStart)}–${time(data.live.intervalEnd)}` : 'Live reading unavailable'}</small></div>${crowdPill(data.live)}</div>
         ${data.timetable.stale ? '<p class="recommendation warning">Old cached timetable: the latest timetable could not be retrieved.</p>' : ''}
@@ -138,3 +146,5 @@ document.addEventListener('click', event => {
 });
 for (const id of ['origin-select', 'dest-select']) $(id).addEventListener('change', updateTimingEntry);
 updateTimingEntry();
+
+document.addEventListener('click', event => { if (event.target.closest('#timing-pattern-link')) document.querySelector('#timing-results .pattern-card')?.scrollIntoView({block: 'start', behavior: 'smooth'}); });

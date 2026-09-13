@@ -8,6 +8,9 @@
     <meta name="description" content="Plan Singapore train and bus journeys with LTA timetables, service alerts, station crowd levels and live bus arrivals.">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
     <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="/companion.css">
+    <link rel="manifest" href="/manifest.webmanifest">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
 </head>
 <body data-view="plan" data-panel="planner">
     <a class="skip-link" href="#planner-section">Skip to journey planner</a>
@@ -17,6 +20,8 @@
             <button id="view-plan" class="selected" type="button" aria-pressed="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 6h14M5 12h10M5 18h6"/><circle cx="18" cy="17" r="3"/></svg><span>Plan</span></button>
             <button id="view-map" type="button" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 5 6-2 6 2 6-2v16l-6 2-6-2-6 2Zm6-2v16m6-14v16"/></svg><span>Map</span></button>
             <button id="view-buses" type="button" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="3" width="14" height="16" rx="3"/><path d="M5 11h14M8 19v2m8-2v2M8 15h1m6 0h1M9 6h6"/></svg><span>Buses</span></button>
+            <button id="view-saved" type="button" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v18l-6-4-6 4Z"/></svg><span>Saved</span></button>
+            <button id="active-trip-button" type="button" class="active-trip-button hidden" aria-label="Continue my trip" aria-haspopup="dialog"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 18 14-14M8 4h11v11"/></svg><span>Trip</span></button>
         </nav>
         <div class="header-actions"><span class="source-pill"><i aria-hidden="true"></i>LTA DataMall</span><button id="theme-toggle" class="theme-toggle" type="button" aria-label="Switch to dark theme"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14A8 8 0 0 1 10 4a8 8 0 1 0 10 10Z"/></svg><span id="theme-label">Dark</span></button></div>
     </header>
@@ -31,12 +36,15 @@
             <div id="panel-scroll" class="panel-scroll">
             <section id="planner-section" tabindex="-1">
                 <h1>Where to today?</h1>
+                <p class="journey-intro">A little less waiting. A better way there.</p>
+                <div class="quick-places" aria-label="Quick actions"><button type="button" data-shortcut="home"><span aria-hidden="true">⌂</span>Home<small id="home-caption">Add your place</small></button><button type="button" data-shortcut="work"><span aria-hidden="true">▣</span>Work<small id="work-caption">Add your place</small></button><button type="button" data-open-nearby><span aria-hidden="true">◎</span>Nearby<small>Stops & stations</small></button></div>
                 <div class="mode-switch" aria-label="Journey type">
                     <button type="button" id="train-only-mode" aria-pressed="false">Train only</button>
                     <button type="button" id="train-mode" class="selected" aria-pressed="true">Train & bus</button>
                     <button type="button" id="bus-mode" aria-pressed="false">Bus only</button>
                 </div>
                 <form id="journey-form">
+                    <div id="mixed-fields" class="location-fields journey-points"><label for="mixed-origin">From</label><button type="button" id="mixed-origin" class="location-trigger" aria-haspopup="dialog"><span>Station, bus stop or location</span><b aria-hidden="true">⌕</b></button><button type="button" id="swap-locations" class="swap-locations" aria-label="Swap start and destination">⇅</button><label for="mixed-destination">To</label><button type="button" id="mixed-destination" class="location-trigger" aria-haspopup="dialog"><span>Where are you heading?</span><b aria-hidden="true">⌕</b></button><p class="small muted">Walk, bus and train connections in one journey.</p></div>
                     <div id="train-fields" class="location-fields">
                         <label id="origin-label" for="origin-select">From station</label>
                         <select id="origin-select" disabled><option value="">Loading LTA stations…</option></select>
@@ -101,6 +109,7 @@
             <section id="bus-section" class="bus-section">
                 <h1>Catch your next bus.</h1>
                 <p class="section-intro">Arrivals & crowd levels, at a glance.</p>
+                <button class="secondary nearby-entry" type="button" data-open-nearby>◎ Find stops near me</button>
                 <form id="bus-form">
                     <label for="bus-stop-input">Search a stop</label>
                     <div class="bus-search"><input id="bus-stop-input" list="bus-search-options" placeholder="e.g. 01012 or Hotel Grand Pacific" autocomplete="off"><button type="submit" class="secondary" aria-label="Show bus arrivals">Go</button></div>
@@ -112,6 +121,7 @@
                 <p id="bus-filter-help" class="small muted">Shared with Journey preferences. A crowd filter excludes missing or old readings; seats are not guaranteed.</p>
                 <div id="bus-results" aria-live="polite"><p class="muted small">Arrival times, bus crowd levels and vehicle type.</p></div>
             </section>
+            <section id="saved-section" class="saved-section" aria-labelledby="saved-title"><p class="eyebrow">YOUR EVERYDAY</p><h1 id="saved-title">Make it your commute.</h1><p class="section-intro">Your places, usual routes and favourite buses.</p><div id="account-summary"></div><div id="saved-status" role="status" class="small"></div><div id="saved-content"></div></section>
             <details class="data-notes">
                 <summary>About these results</summary>
                 <p>Train departures and travel times use LTA’s published timetable, including its service calendars. They are scheduled times, not live predictions. Transfers allow four minutes; your actual walking time may differ.</p>
@@ -119,8 +129,8 @@
                 <p>Bus crowd levels use LTA’s occupancy categories: low = seats available; moderate = standing available; high = limited standing. These are categories, not passenger counts or percentages. Missing or old readings are labelled, and occupancy can change before boarding.</p>
                 <p>Train crowd levels describe stations, not individual train carriages. LTA updates them in ten-minute intervals. Missing or old data is labelled.</p>
                 <p>The time comparison uses LTA's daily station crowd forecast in 30-minute intervals. Each level describes your starting station at that time, not the whole train journey. A missing forecast is unavailable, never assumed quiet. Train comparisons include scheduled waiting and transfers, but not your trip to the station. Current service and lift notices are applied; recheck before travelling.</p>
-                <p>Nearby road alerts come from LTA Traffic Incidents within 1.5 km of the selected station or bus stop. They are current reports, not future traffic predictions or a measurement of congestion along your bus route. No reported incident does not mean roads are clear.</p>
-                <p>Bus alternatives cover direct services within your chosen walking limit. Automatic uses 1 km at each end, or 450 m with “Less walking”. Crowd filters only accept upcoming arrivals with matching fresh readings; “Avoid high crowding” accepts seats or standing space, and “Seats reported available” accepts seats only. This may leave no matching arrivals. Transfers between buses are not included. Diversions may change the published route.</p>
+                <p>Nearby road alerts come from LTA Traffic Incidents within 1.5 km of the selected station or bus stop. They are current reports, not future traffic predictions or a measurement of congestion along your bus route. Historical passenger patterns describe tap-in/out activity, not traffic speed; they do not replace official crowd forecasts. No reported incident does not mean roads are clear.</p>
+                <p>Bus only finds direct services. Train & bus also checks walking and bus connections to rail. It checks a limited set of nearby transfer options. Automatic uses 1 km at each end, or 450 m with “Less walking”. Crowd filters only accept upcoming arrivals with matching fresh readings; “Avoid high crowding” accepts seats or standing space, and “Seats reported available” accepts seats only. This may leave no matching arrivals. Standalone bus-to-bus transfers are not included; connected journeys can include bus → train → bus. Diversions may change the published route.</p>
                 <p>Map lines connect station or stop coordinates. They are schematic connections, not exact tracks or roads.</p>
                 <p>Wheelchair access filters bus predictions by LTA’s wheelchair-accessible bus flag. It also checks reported station lift maintenance and avoids transfers at affected stations. An outage at your start or destination is flagged for staff assistance; it does not mean every lift at that station is unavailable. No reported outage is not a guarantee that all lifts work.</p>
                 <p>Step-free routes to bus stops, accessible station entrances and wheelchair-bay availability are not verified by these feeds. Bus access-time estimates use your selected walking or rolling pace. Everyone can adjust the train transfer allowance; enabling wheelchair access starts with at least eight minutes, which you can then change.</p>
@@ -163,5 +173,18 @@
         </div>
     </dialog>
     <script src="/travel-times.js" defer></script>
+    <div id="app-toast" class="app-toast hidden" role="status"></div>
+    <dialog id="location-dialog" class="companion-dialog" aria-labelledby="location-title"><div class="station-dialog-header"><h2 id="location-title">Choose a location</h2><button type="button" data-close="location-dialog" aria-label="Close location search">✕</button></div><div class="dialog-scroll"><label for="location-search">Search stations or bus stops</label><input id="location-search" type="search" autocomplete="off" placeholder="Name, station code or bus stop"><div class="location-tools"><button type="button" id="location-gps" class="secondary">◎ Use my location</button><button type="button" id="location-map" class="secondary">Choose on map</button></div><p class="small muted">For an address, choose its location on the map.</p><p id="location-status" class="small" role="status"></p><div id="location-results" class="location-results"></div><details class="coordinate-entry"><summary>Enter coordinates instead</summary><form id="coordinate-form"><label for="coordinate-lat">Latitude</label><input id="coordinate-lat" type="number" step="any" min="1.13" max="1.49" required inputmode="decimal"><label for="coordinate-lon">Longitude</label><input id="coordinate-lon" type="number" step="any" min="103.59" max="104.12" required inputmode="decimal"><button class="secondary" type="submit">Use this location</button></form></details></div></dialog>
+    <dialog id="nearby-dialog" class="companion-dialog" aria-labelledby="nearby-title"><div class="station-dialog-header"><div><p class="eyebrow">AROUND YOU</p><h2 id="nearby-title">Your next connection.</h2></div><button type="button" data-close="nearby-dialog" aria-label="Close nearby stops">✕</button></div><div class="dialog-scroll"><p class="small muted">Find stops and stations within 2.5 km. Your location is used for this search.</p><button type="button" id="nearby-refresh" class="primary">◎ Use my location</button><p id="nearby-status" role="status"></p><div id="nearby-results"></div></div></dialog>
+    <dialog id="detail-dialog" class="companion-dialog" aria-labelledby="detail-title"><div class="station-dialog-header"><h2 id="detail-title">Station details</h2><button type="button" data-close="detail-dialog" aria-label="Close details">✕</button></div><div class="dialog-scroll" id="detail-content"></div></dialog>
+    <dialog id="auth-dialog" class="companion-dialog auth-dialog" aria-labelledby="auth-title"><div class="station-dialog-header"><div><p class="eyebrow">WELCOME TO RAILPULSE</p><h2 id="auth-title">Your commute, saved.</h2></div><button type="button" data-close="auth-dialog" aria-label="Close sign in">✕</button></div><div class="dialog-scroll"><p>Sign in to keep Home, Work and favourites with you. The journey checker is always free to use without an account.</p><form id="auth-form"><label for="auth-email">Email</label><input id="auth-email" type="email" autocomplete="email" required><label for="auth-password">Password</label><input id="auth-password" type="password" autocomplete="current-password" minlength="8" required><button id="auth-submit" class="primary" type="submit">Sign in</button></form><div class="auth-links"><button id="auth-switch" type="button" class="text-button">Create an account</button><button id="auth-reset" type="button" class="text-button">Forgot password?</button></div><p id="auth-status" role="status" class="small"></p></div></dialog>
+    <dialog id="save-dialog" class="companion-dialog" aria-labelledby="save-title"><div class="station-dialog-header"><h2 id="save-title">Save a place</h2><button type="button" data-close="save-dialog" aria-label="Cancel saving">✕</button></div><div class="dialog-scroll"><form id="save-form"><label for="save-name">Name</label><input id="save-name" maxlength="80" required autocomplete="off"><div id="save-place-fields"><label for="save-category">Shortcut</label><select id="save-category"><option value="other">Favourite place</option><option value="home">Home</option><option value="work">Work</option></select><label for="save-location">Location</label><button id="save-location" class="location-trigger" type="button">Choose station, stop or map location</button></div><p id="save-description" class="small muted"></p><button id="save-submit" type="submit" class="primary">Save</button><p id="save-status" class="small" role="status"></p></form></div></dialog>
+    <dialog id="trip-dialog" class="companion-dialog" aria-labelledby="trip-title"><div class="station-dialog-header"><div><p class="eyebrow">ON YOUR WAY</p><h2 id="trip-title">One step at a time.</h2></div><button type="button" data-close="trip-dialog" aria-label="Minimise trip guidance">✕</button></div><div class="dialog-scroll"><div id="trip-content" aria-live="polite"></div><div class="trip-controls"><button id="trip-back" type="button" class="secondary">Previous</button><button id="trip-next" type="button" class="primary">Next step</button></div><button id="trip-gps" type="button" class="secondary">◎ Turn on stop reminders</button><p id="trip-gps-status" class="small muted" role="status">GPS reminders work while this app is open. Underground GPS can be unreliable; follow station signs and announcements.</p><button id="trip-end" type="button" class="text-button">End this trip</button></div></dialog>
+    <div id="map-pick-banner" class="map-pick-banner hidden"><span>Tap your location on the map.</span><button id="map-pick-cancel" type="button">Cancel</button></div>
+    <script src="/vendor/supabase.js" defer></script>
+    <script src="/companion.js" defer></script>
+    <script src="/account.js" defer></script>
+    <script src="/guidance.js" defer></script>
+    <script src="/trip.js" defer></script>
 </body>
 </html>

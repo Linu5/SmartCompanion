@@ -39,6 +39,7 @@ async function main() {
     await db.exec(`
         create role anon nologin;
         create role authenticated nologin;
+        create role service_role nologin bypassrls;
         create schema auth;
         create table auth.users (id uuid primary key);
         create function auth.uid() returns uuid language sql stable as $$
@@ -59,7 +60,11 @@ async function main() {
         try { await db.exec(upgrade); } catch (error) { await db.exec('rollback'); throw error; }
     }, 'P0001');
     check('failed add-on leaves no partially created table', (await db.query("select to_regclass('public.railpulse_saved_places') as table_id")).rows[0].table_id === null);
-    await db.exec(setup);
+    if (process.argv.includes('--companion-upgrade')) {
+        const oldSetup = require('node:child_process').execFileSync('git', ['show', '462b266:supabase/railpulse-setup.sql'], {cwd: root, encoding: 'utf8'});
+        await db.exec(oldSetup);
+        await db.exec(fs.readFileSync(path.join(__dirname, 'migrations/20260913025956_companion_features.sql'), 'utf8'));
+    } else await db.exec(setup);
     if (useUpgrade) {
         // Only in this isolated database: remove the new table to model the
         // previous four-table install, whose definitions are unchanged.
@@ -78,9 +83,13 @@ async function main() {
         }
     }
     const results = await db.exec(verify);
-    check('verification finds all five tables with expected policies, grants, foreign keys and triggers', results[0].rows.length === 5 && results[0].rows.every(row => Object.entries(row).every(([key, value]) => key === 'table_name' || value === true)));
+    check('verification finds all six user tables with expected policies, grants, foreign keys and triggers', results[0].rows.length === 6 && results[0].rows.every(row => Object.entries(row).every(([key, value]) => key === 'table_name' || value === true)));
     check('timestamp function is invoker-only and client RPC is denied', results[1].rows.length === 1 && Object.values(results[1].rows[0]).every(value => value === true));
-    check('all 20 policies exist', results[2].rows.length === 20);
+    check('all 24 policies exist', results[2].rows.length === 24);
+    for (const table of ['railpulse_notification_deliveries', 'railpulse_notification_status']) {
+        await denied(table + ': anonymous clients cannot read delivery metadata', () => asUser(null, 'select * from public.' + table, [], 'anon'));
+        await denied(table + ': signed-in clients cannot read delivery metadata', () => asUser(alice, 'select * from public.' + table));
+    }
     check('existing unrelated data and grants are preserved', (await db.query("select note, has_table_privilege('anon', 'public.friend_notes', 'SELECT') as access from public.friend_notes")).rows[0].access === true);
 
     const fixtures = [
@@ -88,6 +97,7 @@ async function main() {
         { table: 'railpulse_preferences', columns: 'theme', values: ['dark'], field: 'theme', replacement: 'light' },
         { table: 'railpulse_saved_routes', columns: 'name, mode, origin_id, destination_id', values: ['School', 'train-only', 'EW24', 'EW23'], field: 'name' },
         { table: 'railpulse_favourite_buses', columns: 'service_no, bus_stop_code, label', values: ['12e', '01012', 'My bus'], field: 'label' },
+        { table: 'railpulse_push_subscriptions', columns: 'endpoint, subscription', values: ['https://example.invalid/push', '{}'], field: 'endpoint', replacement: 'https://example.invalid/updated' },
         { table: 'railpulse_saved_places', columns: 'label, category, location_type, address, latitude, longitude', values: ['Home', 'home', 'address', 'Synthetic test address', 1.3, 103.8], field: 'label' }
     ];
     for (const f of fixtures) {

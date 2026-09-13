@@ -53,10 +53,11 @@ function setTheme(theme) {
 function syncShell() {
     document.body.dataset.view = currentView;
     document.body.dataset.panel = panelPage;
-    $('panel-heading').textContent = currentView === 'buses' ? 'AT THE BUS STOP' : 'YOUR JOURNEY';
+    document.body.dataset.mode = mode;
+    $('panel-heading').textContent = currentView === 'saved' ? 'YOUR EVERYDAY' : currentView === 'buses' ? 'AT THE BUS STOP' : 'YOUR JOURNEY';
     $('edit-journey').classList.toggle('hidden', currentView !== 'plan' || panelPage !== 'results');
     $('map-open-label').textContent = lastJourney ? 'View my journey' : 'Plan a journey';
-    for (const view of ['plan', 'map', 'buses']) {
+    for (const view of ['plan', 'map', 'buses', 'saved']) {
         $(`view-${view}`).classList.toggle('selected', currentView === view);
         $(`view-${view}`).setAttribute('aria-pressed', String(currentView === view));
     }
@@ -66,7 +67,7 @@ function setView(view, results = Boolean(lastJourney)) {
     currentView = view;
     if (view === 'plan') panelPage = results && lastJourney ? 'results' : 'planner';
     // The standalone bus tab is independent of the train-only journey filter.
-    if (view === 'buses') panelPage = 'planner';
+    if (view === 'buses' || view === 'saved') panelPage = 'planner';
     syncShell();
     $('panel-scroll').scrollTop = panelPositions.get(`${currentView}:${panelPage}`) || 0;
     if (!document.activeElement.getClientRects().length) $(`view-${view}`).focus({ preventScroll: true });
@@ -194,7 +195,8 @@ function switchMode(next) {
     document.querySelector('#preference option[value="transfers"]').disabled = mode === 'bus';
     document.querySelector('#preference option[value="walking"]').disabled = mode === 'train-only';
     if ((mode === 'bus' && $('preference').value === 'transfers') || (mode === 'train-only' && $('preference').value === 'walking')) $('preference').value = 'fastest';
-    $('train-fields').classList.toggle('hidden', mode === 'bus');
+    $('train-fields').classList.toggle('hidden', mode !== 'train-only');
+    $('mixed-fields').classList.toggle('hidden', mode !== 'train');
     $('bus-fields').classList.toggle('hidden', mode !== 'bus');
     if (mode === 'train-only') {
         busVersion++; activeBusStop = null;
@@ -209,6 +211,9 @@ function switchMode(next) {
 }
 
 function updateAccessControls() {
+    document.body.dataset.mode = mode;
+    $('train-fields').classList.toggle('hidden', mode !== 'train-only');
+    $('mixed-fields').classList.toggle('hidden', mode !== 'train');
     $('transfer-settings').classList.toggle('hidden', mode === 'bus');
     $('transfer-minutes').disabled = mode === 'bus';
     $('walking-preferences').classList.toggle('hidden', mode !== 'train');
@@ -223,6 +228,7 @@ function updateAccessControls() {
 }
 
 function clearJourney() {
+    window.clearMixedLocations?.();
     requestVersion++;
     activeJourney = null; lastJourney = null; journeyBusy = false;
     $('origin-select').value = ''; $('dest-select').value = '';
@@ -247,6 +253,7 @@ async function planJourney(event, refreshing = false) {
         wheelchair: $('wheelchair-access').checked, transferMinutes: mode !== 'bus' ? $('transfer-minutes').value : 4,
         maxWalk: $('max-walk').value, walkPace: $('walk-pace').value, busCrowding: $('bus-crowd-preference').value
     };
+    if (!refreshing && mode === 'train') Object.assign(request, window.mixedRequest?.() || {});
     if (!request.origin || !request.destination || request.origin === request.destination) {
         $('planner-status').textContent = 'Choose two different stations or select two bus stops from the suggestions.';
         return;
@@ -256,7 +263,7 @@ async function planJourney(event, refreshing = false) {
     $('plan-route-btn').disabled = true;
     $('planner-status').textContent = refreshing ? 'Updating your journey…' : request.mode === 'train-only' ? 'Checking LTA train timetables, alerts and crowd levels…' : 'Checking LTA routes, timetables and arrivals…';
     try {
-        const data = await api(`/api/journey?${new URLSearchParams(request)}`);
+        const data = await api(`${request.mode === 'combined' ? '/api/combined-journey' : '/api/journey'}?${new URLSearchParams(request)}`);
         if (version !== requestVersion) return;
         activeJourney = request; lastJourney = data;
         if (!refreshing && currentView === 'plan') {
@@ -286,10 +293,10 @@ function trainCard(train, data) {
     const levels = { l: ['Low', 'green'], m: ['Moderate', 'amber'], h: ['High', 'red'] };
     const crowds = train.stationIds.map(id => {
         const station = stationMap.get(id);
-        const rows = crowdRows.filter(row => station?.codes.includes(row.Station));
+        const rows = crowdRows.filter(row => station?.codes.includes(row.Station) && Number.isFinite(Date.parse(row.StartTime)) && Date.parse(row.StartTime) <= Date.now() && Date.parse(row.EndTime) > Date.parse(row.StartTime));
         const row = rows.sort((a, b) => ({ h: 3, m: 2, l: 1 }[b.CrowdLevel] || 0) - ({ h: 3, m: 2, l: 1 }[a.CrowdLevel] || 0))[0];
         if (!row || !levels[row.CrowdLevel]) return `<div>${name(id)}: <span class="muted">unavailable</span></div>`;
-        const old = row.meta?.stale || Date.now() - Date.parse(row.EndTime) > 600000;
+        const old = row.meta?.stale || Date.now() >= Date.parse(row.EndTime);
         return `<div>${name(id)}: <span class="badge ${old ? 'amber' : levels[row.CrowdLevel][1]}">${levels[row.CrowdLevel][0]}${old ? ' · old reading' : ''}</span> <small>${time(row.StartTime)}–${time(row.EndTime)}</small></div>`;
     }).join('');
     return `<article class="journey-card">
@@ -338,6 +345,7 @@ function accessibilityNotes(data) {
 }
 function renderJourney(data, fit) {
     renderAlerts(data.alerts);
+    if (data.mode === 'combined') { window.renderCombined(data, fit); return; }
     const results = $('route-results');
     const detailStates = new Map([...results.querySelectorAll('[data-journey-details]')].map(detail => [detail.dataset.journeyDetails, detail.open]));
     results.classList.remove('hidden');
@@ -385,6 +393,7 @@ function renderJourney(data, fit) {
     else if (data.train) showTrain(data.train, fit);
     else if (data.buses.options[0]) showBus(data.buses.options[0], fit);
     else resetMapRoute();
+    document.dispatchEvent(new CustomEvent('journey-rendered', { detail: data }));
 }
 
 function resetMapRoute() {
@@ -544,7 +553,7 @@ $('reset-preferences').addEventListener('click', () => {
 });
 $('fit-route-btn').addEventListener('click', fitMapRoute);
 $('theme-toggle').addEventListener('click', () => setTheme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'));
-for (const view of ['plan', 'map', 'buses']) $(`view-${view}`).addEventListener('click', () => setView(view));
+for (const view of ['plan', 'map', 'buses', 'saved']) $(`view-${view}`).addEventListener('click', () => setView(view));
 $('edit-journey').addEventListener('click', () => { setView('plan', false); $('panel-scroll').scrollTop = 0; requestAnimationFrame(() => $('planner-section').focus({ preventScroll: true })); });
 $('map-open-planner').addEventListener('click', () => setView('plan', Boolean(lastJourney)));
 $('panel-map-button').addEventListener('click', () => setView('map'));

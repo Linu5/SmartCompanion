@@ -26,11 +26,15 @@ create table public.railpulse_preferences (
     preference text not null default 'fastest'
         check (preference in ('fastest', 'walking', 'transfers')),
     wheelchair_access boolean not null default false,
-    -- Applied when wheelchair access is enabled; ordinary transfers use 4 min.
+    -- Applied to every train transfer; wheelchair access starts at eight minutes.
     transfer_minutes smallint not null default 8
         check (transfer_minutes between 4 and 30),
     theme text not null default 'light'
         check (theme in ('light', 'dark')),
+    settings jsonb not null default '{}'::jsonb
+        check (jsonb_typeof(settings) = 'object' and octet_length(settings::text) <= 4096),
+    watched_lines text[] not null default '{}'::text[]
+        check (watched_lines <@ array['NSL','EWL','CGL','NEL','CCL','DTL','TEL','BPL','SLRT','PLRT']::text[]),
     created_at timestamptz not null default now(),
     updated_at timestamptz not null default now()
 );
@@ -49,6 +53,11 @@ create table public.railpulse_saved_routes (
         check (char_length(origin_id) between 1 and 64 and origin_id = btrim(origin_id)),
     destination_id text not null
         check (char_length(destination_id) between 1 and 64 and destination_id = btrim(destination_id)),
+    -- Connected journeys keep mode='train', with station:/stop:/point: endpoint IDs.
+    journey jsonb not null default '{}'::jsonb
+        check (jsonb_typeof(journey) = 'object' and octet_length(journey::text) <= 8192),
+    alert_lines text[] not null default '{}'::text[]
+        check (alert_lines <@ array['NSL','EWL','CGL','NEL','CCL','DTL','TEL','BPL','SLRT','PLRT']::text[]),
     created_at timestamptz not null default now(),
     updated_at timestamptz not null default now(),
     constraint railpulse_route_distinct_endpoints check (origin_id <> destination_id),
@@ -115,6 +124,36 @@ create unique index railpulse_saved_places_shortcut
 create index railpulse_saved_places_recent
     on public.railpulse_saved_places (user_id, created_at desc);
 
+create table public.railpulse_push_subscriptions (
+    id uuid primary key default gen_random_uuid(),
+    user_id uuid not null default auth.uid() references auth.users(id) on delete cascade,
+    endpoint text not null check (length(endpoint) between 10 and 2048 and endpoint like 'https://%'),
+    subscription jsonb not null check (jsonb_typeof(subscription) = 'object' and octet_length(subscription::text) <= 8192),
+    created_at timestamptz not null default now(),
+    updated_at timestamptz not null default now(),
+    unique(user_id, endpoint)
+);
+create index railpulse_push_subscriptions_user on public.railpulse_push_subscriptions(user_id);
+grant select on public.railpulse_saved_routes, public.railpulse_preferences to service_role;
+grant select, delete on public.railpulse_push_subscriptions to service_role;
+
+-- Delivery claims and scheduler status are backend-only. No client policies.
+create table public.railpulse_notification_deliveries (
+    subscription_id uuid not null references public.railpulse_push_subscriptions(id) on delete cascade,
+    event_hash text not null check (length(event_hash) = 64),
+    state text not null default 'pending' check (state in ('pending','sent')),
+    claimed_at timestamptz not null default now(),
+    primary key(subscription_id, event_hash)
+);
+create table public.railpulse_notification_status (
+    id boolean primary key default true check (id),
+    checked_at timestamptz not null default now()
+);
+alter table public.railpulse_notification_deliveries enable row level security;
+alter table public.railpulse_notification_status enable row level security;
+revoke all on public.railpulse_notification_deliveries, public.railpulse_notification_status from public, anon, authenticated;
+grant all on public.railpulse_notification_deliveries, public.railpulse_notification_status to service_role;
+
 -- Runs with the calling user's permissions. No privileged signup trigger is
 -- installed on auth.users, and no user metadata is used for authorization.
 create function public.railpulse_touch_updated_at()
@@ -142,7 +181,8 @@ begin
         'railpulse_preferences',
         'railpulse_saved_routes',
         'railpulse_favourite_buses',
-        'railpulse_saved_places'
+        'railpulse_saved_places',
+        'railpulse_push_subscriptions'
     ] loop
         execute format('alter table public.%I enable row level security', table_name);
 
@@ -176,13 +216,13 @@ comment on table public.railpulse_profiles is 'Private optional display name; lo
 comment on table public.railpulse_preferences is 'One optional preferences row per user; create lazily after sign-in.';
 comment on table public.railpulse_saved_routes is 'Route bookmarks. Replan against current LTA data when opened; do not store live ETA/crowd snapshots.';
 comment on table public.railpulse_favourite_buses is 'Favourite service at a boarding stop, with optional direction preference.';
-comment on table public.railpulse_saved_places is 'Private Home, Work and custom shortcuts. Address locations need geocoding and routing integration in the app.';
+comment on table public.railpulse_saved_places is 'Private Home, Work and custom shortcuts. Address locations use user-selected map coordinates.';
 
 commit;
 
--- These five empty tables are ready for application integration.
+-- Six private user tables and two backend-only delivery tables are ready.
 select tablename, rowsecurity as rls_enabled
 from pg_catalog.pg_tables
 where schemaname = 'public'
-  and tablename in ('railpulse_profiles', 'railpulse_preferences', 'railpulse_saved_routes', 'railpulse_favourite_buses', 'railpulse_saved_places')
+  and tablename like 'railpulse_%'
 order by tablename;

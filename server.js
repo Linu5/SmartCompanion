@@ -7,15 +7,52 @@ const bus = require('./lib/bus');
 const access = require('./lib/accessibility');
 const travelTimes = require('./lib/travel-times');
 const preferences = require('./lib/preferences');
+const locations = require('./lib/locations');
+const patterns = require('./lib/patterns');
+const combined = require('./lib/combined');
+const notifications = require('./lib/notifications');
 
 const app = express();
 app.disable('x-powered-by');
+app.use(express.json({ limit: '24kb' }));
+app.get('/vendor/supabase.js', (req, res) => res.sendFile(path.join(__dirname, 'node_modules/@supabase/supabase-js/dist/umd/supabase.js')));
 app.use(express.static(path.join(__dirname, 'public')));
 const validStop = value => typeof value === 'string' && /^\d{5}$/.test(value);
 const provenance = result => ({ source: 'LTA DataMall', updatedAt: result.updatedAt, stale: result.stale });
 const sendFeed = (res, result) => res.json({ ...result.data, meta: provenance(result) });
 
 app.get('/api/health', (req, res) => res.json({ ok: true, keyConfigured: !!process.env.LTA_DATAMALL_API_KEY }));
+app.get('/api/notifications/config', async (req, res) => { res.set('Cache-Control', 'no-store'); res.json(await notifications.publicStatus()); });
+app.post('/api/notifications/check', async (req, res) => {
+    res.set('Cache-Control', 'no-store');
+    if (!notifications.authorised(req.get('authorization'), process.env.CRON_SECRET)) return res.status(401).json({ error: 'Unauthorised' });
+    res.json(await notifications.check());
+});
+app.get('/api/locations', async (req, res) => {
+    const query = String(req.query.q || '').trim().toLowerCase().slice(0, 100);
+    if (query.length < 2) return res.json({ value: [] });
+    res.json({ value: (await locations.all()).filter(row => `${row.name} ${row.detail}`.toLowerCase().includes(query)).slice(0, 35) });
+});
+app.get('/api/nearby', async (req, res) => res.json(await locations.nearby(req.query.lat, req.query.lon)));
+app.get('/api/station-exits', async (req, res) => res.json(await locations.exits(req.query.station)));
+app.get('/api/combined-journey', async (req, res) => res.json(await combined.plan(req.query)));
+app.get('/api/patterns', async (req, res) => {
+    const kind = req.query.kind === 'bus' ? 'bus' : 'train';
+    const at = req.query.at ? new Date(String(req.query.at)) : new Date();
+    if (!Number.isFinite(at.getTime())) return res.status(400).json({ error: 'Choose a valid date.' });
+    let codes;
+    if (kind === 'bus') {
+        if (!validStop(req.query.id)) return res.status(400).json({ error: 'Choose a bus stop.' });
+        codes = [req.query.id];
+    } else {
+        const { network } = await rail.getNetwork();
+        const station = network.stations.find(row => row.id === req.query.id);
+        if (!station) return res.status(400).json({ error: 'Choose an operating station.' });
+        codes = station.codes;
+    }
+    const feed = await patterns.dataset(kind).catch(() => null);
+    res.json(patterns.profileAt(feed, codes, at));
+});
 app.get('/api/alerts', async (req, res) => sendFeed(res, await lta.alerts()));
 app.get('/api/bus-arrival', async (req, res) => {
     if (!validStop(req.query.BusStopCode)) return res.status(400).json({ error: 'Enter a five-digit bus stop code.' });
