@@ -11,6 +11,35 @@ let stationPickerTarget = null;
 const panelPositions = new Map();
 const phoneLayout = window.matchMedia('(max-width: 800px), (max-width: 1000px) and (max-height: 500px)');
 const lineColors = { NSL: '#ed675c', EWL: '#57be88', CGL: '#57be88', NEL: '#b28dd8', CCL: '#efb540', DTL: '#559fee', TEL: '#b99978', BPL: '#9bbbaa', SLRT: '#9bbbaa', PLRT: '#9bbbaa' };
+const preferenceDefaults = { preference: 'fastest', 'max-walk': 'auto', 'walk-pace': '75', 'transfer-minutes': '4', 'bus-crowd-preference': 'any', 'wheelchair-access': false };
+
+function rememberPreferences() {
+    try {
+        if ($('remember-preferences').checked) {
+            const values = Object.fromEntries(Object.keys(preferenceDefaults).map(id => [id, $(id).type === 'checkbox' ? $(id).checked : $(id).value]));
+            localStorage.setItem('railpulse-preferences', JSON.stringify({ version: 1, values }));
+            $('preferences-storage-status').textContent = 'Saved in this browser. Used next time you visit on this device.';
+        } else {
+            localStorage.removeItem('railpulse-preferences');
+            $('preferences-storage-status').textContent = 'Not saved. These settings apply until you reload.';
+        }
+    } catch { $('preferences-storage-status').textContent = 'This browser could not save your settings. They still work for this visit.'; }
+}
+function restorePreferences() {
+    try {
+        const saved = JSON.parse(localStorage.getItem('railpulse-preferences') || 'null');
+        if (saved?.version !== 1 || !saved.values) return;
+        for (const id of Object.keys(preferenceDefaults)) {
+            const value = saved.values[id], field = $(id);
+            if (field.type === 'checkbox') field.checked = value === true;
+            else if (id === 'transfer-minutes') {
+                if (typeof value === 'string' && Number.isInteger(Number(value)) && Number(value) >= 4 && Number(value) <= 30) field.value = value;
+            } else if ([...field.options].some(option => option.value === value)) field.value = value;
+        }
+        $('remember-preferences').checked = true;
+        $('preferences-storage-status').textContent = 'Your preferences were restored from this browser.';
+    } catch { /* Invalid or unavailable storage leaves usable defaults. */ }
+}
 
 function setTheme(theme) {
     const dark = theme === 'dark';
@@ -176,14 +205,21 @@ function switchMode(next) {
         $(`${value}-mode`).setAttribute('aria-pressed', String(value === mode));
     }
     updateAccessControls();
+    rememberPreferences();
 }
 
 function updateAccessControls() {
-    const enabled = $('wheelchair-access').checked && mode !== 'bus';
-    $('transfer-settings').classList.toggle('hidden', !enabled);
-    $('transfer-minutes').disabled = !enabled;
+    $('transfer-settings').classList.toggle('hidden', mode === 'bus');
+    $('transfer-minutes').disabled = mode === 'bus';
+    $('walking-preferences').classList.toggle('hidden', mode !== 'train');
+    $('crowd-preferences').classList.toggle('hidden', mode === 'train-only');
+    for (const id of ['max-walk', 'walk-pace']) $(id).disabled = mode !== 'train';
+    $('bus-crowd-preference').disabled = mode === 'train-only';
     $('bus-wheelchair-access').checked = $('wheelchair-access').checked;
+    $('bus-crowding').value = $('bus-crowd-preference').value;
     $('preference-summary').textContent = ({ fastest: 'Fastest', walking: 'Less walking', transfers: 'Fewer transfers' })[$('preference').value];
+    const limit = $('max-walk').value === 'auto' ? ($('preference').value === 'walking' ? 450 : 1000) : Number($('max-walk').value);
+    $('walking-limit-help').textContent = `Up to ${limit >= 1000 ? `${limit / 1000} km` : `${limit} m`} at each end of a bus alternative. Distance is estimated, not a verified walking route.`;
 }
 
 function clearJourney() {
@@ -208,7 +244,8 @@ async function planJourney(event, refreshing = false) {
     const request = refreshing ? activeJourney : {
         mode, origin: mode !== 'bus' ? $('origin-select').value : stopCode($('bus-origin').value),
         destination: mode !== 'bus' ? $('dest-select').value : stopCode($('bus-destination').value), preference: $('preference').value,
-        wheelchair: $('wheelchair-access').checked, transferMinutes: $('wheelchair-access').checked && mode !== 'bus' ? $('transfer-minutes').value : 4
+        wheelchair: $('wheelchair-access').checked, transferMinutes: mode !== 'bus' ? $('transfer-minutes').value : 4,
+        maxWalk: $('max-walk').value, walkPace: $('walk-pace').value, busCrowding: $('bus-crowd-preference').value
     };
     if (!request.origin || !request.destination || request.origin === request.destination) {
         $('planner-status').textContent = 'Choose two different stations or select two bus stops from the suggestions.';
@@ -296,7 +333,7 @@ function accessibilityNotes(data) {
         liftMessage = `<p>${escapeHtml(status)}</p>${access.notices.map(notice => `<p class="lift-notice"><strong>${escapeHtml(notice.stationName)}${notice.atEndpoint ? ' · start/destination' : ''}</strong><br>${escapeHtml(notice.description)}${notice.liftId ? ` (${escapeHtml(notice.liftId)})` : ''}</p>`).join('')}
             <p class="small muted">${access.liftUpdatedAt ? `Lift feed checked ${time(access.liftUpdatedAt)}. ` : ''}Transfers avoid stations with reported lift maintenance. Allowance: ${access.transferMinutes} min per transfer.</p><p class="small muted">Accessible entrances and the full step-free path have not been verified.</p>`;
     }
-    const busMessage = data.mode !== 'train-only' ? '<p>Only buses reported as wheelchair-equipped are included.</p><p class="small muted">Step-free access to the boarding and alighting stops, and space in the wheelchair bay, are not confirmed. Access-time estimates use the general walking model.</p>' : '';
+    const busMessage = data.mode !== 'train-only' ? '<p>Only buses reported as wheelchair-equipped are included.</p><p class="small muted">Step-free access to the boarding and alighting stops, and space in the wheelchair bay, are not confirmed. Access-time estimates use your selected pace.</p>' : '';
     return `<section class="access-checks" aria-label="Wheelchair access checks"><h3>Wheelchair access checks</h3>${liftMessage}${busMessage}</section>`;
 }
 function renderJourney(data, fit) {
@@ -328,12 +365,17 @@ function renderJourney(data, fit) {
     results.innerHTML = `<p class="eyebrow">JOURNEY OPTIONS</p><h2>${escapeHtml(data.origin)} → ${escapeHtml(data.destination)}</h2>
         ${data.mode !== 'bus' ? '<button type="button" class="secondary compare-results-button" data-compare-times>Compare departure times ↗</button>' : ''}
         ${recommendation ? `<div class="recommendation${data.affected ? ' warning' : ''}">${escapeHtml(recommendation)}</div>` : ''}
+        <div class="applied-preferences"><strong>Your settings</strong><p>${[
+            data.mode !== 'bus' ? `${data.train?.transferMinutes || activeJourney?.transferMinutes || 4} min per train transfer` : '',
+            data.mode === 'train' && data.buses.radius ? `up to ${data.buses.radius} m walking at each end · ${(data.buses.walkPace || 75) * .06} km/h pace` : '',
+            !trainOnly && data.buses.crowding === 'seats' ? 'buses with seats reported available' : !trainOnly && data.buses.crowding === 'avoid-high' ? 'high bus crowding excluded' : ''
+        ].filter(Boolean).map(escapeHtml).join(' · ') || 'Direct buses · any crowd level'}</p></div>
         ${accessibilityNotes(data)}
         ${!data.alerts || data.alerts.meta?.stale || data.noDetailedDisruption ? '<div class="recommendation warning">Current disruption details could not be confirmed. Check operator announcements before travelling.</div>' : ''}
         ${data.timetable?.stale || data.buses.stale ? '<div class="recommendation warning">Some route or timetable data is cached because its refresh failed.</div>' : ''}
         ${relevant.length ? `<details class="recommendation warning" data-journey-details="advisories" open><summary>Advisories to check for this journey</summary>${relevant.map(m => `<p>${escapeHtml(m.Content)}</p>`).join('')}</details>` : ''}
         ${data.train ? trainCard(data.train, data) : ''}
-        ${trainOnly ? '' : `<h3>Direct bus options</h3>${data.buses.error ? `<p class="error">${escapeHtml(data.buses.error)}</p>` : data.buses.options.length ? data.buses.options.map(busCard).join('') : `<p class="muted small">${data.accessibility?.requested ? 'No matching direct bus arrival with wheelchair access confirmed in the current response.' : data.mode === 'train' ? `No direct bus found within an estimated ${data.buses.radius} m walk at each end.` : 'No direct service found between these two stops.'} Bus transfers are not included.</p>`}
+        ${trainOnly ? '' : `<h3>Direct bus options</h3>${data.buses.crowding && data.buses.crowding !== 'any' ? '<p class="small muted">Only upcoming buses with matching fresh crowd readings are included. Missing or old readings cannot meet this filter. Space may change before boarding.</p>' : ''}${data.buses.error ? `<p class="error">${escapeHtml(data.buses.error)}</p>` : data.buses.options.length ? data.buses.options.map(busCard).join('') : `<p class="muted small">${data.buses.crowding && data.buses.crowding !== 'any' ? 'No upcoming direct buses match your crowd and access settings in the available readings. Try Any crowd level or check again.' : data.accessibility?.requested ? 'No matching direct bus arrival with wheelchair access confirmed in the current response.' : data.mode === 'train' ? `No direct bus found within an estimated ${data.buses.radius} m walk at each end.` : 'No direct service found between these two stops.'} Bus transfers are not included.</p>`}
         <p class="small muted">${data.buses.updatedAt ? `Bus routes downloaded ${time(data.buses.updatedAt)} · ` : ''}Compare estimates with care; delays, diversions and walking conditions can change your journey.</p>`}`;
     if (!fit) for (const detail of results.querySelectorAll('[data-journey-details]')) {
         if (detailStates.has(detail.dataset.journeyDetails)) detail.open = detailStates.get(detail.dataset.journeyDetails);
@@ -453,25 +495,28 @@ async function searchBus(event, refresh = false) {
     const version = ++busVersion;
     if (!refresh) $('bus-results').textContent = 'Loading arrivals…';
     try {
-        const [data, stops] = await Promise.all([api(`/api/bus-arrival?BusStopCode=${code}&wheelchair=${$('wheelchair-access').checked}`), api(`/api/bus-stops?BusStopCode=${code}`)]);
+        const [data, stops] = await Promise.all([api(`/api/bus-arrival?${new URLSearchParams({ BusStopCode: code, wheelchair: $('wheelchair-access').checked, busCrowding: $('bus-crowd-preference').value })}`), api(`/api/bus-stops?BusStopCode=${code}`)]);
         if (version !== busVersion) return;
         activeBusStop = code;
         const stop = stops.value.find(s => s.BusStopCode === code);
         if (!stop) { $('bus-results').textContent = 'Stop not found in LTA data.'; return; }
         const services = data.Services || [];
+        const filtered = data.meta.wheelchairOnly || (data.meta.crowding && data.meta.crowding !== 'any');
         $('bus-results').innerHTML = `<p><strong>${escapeHtml(stop.Description)}</strong><br><span class="small muted">${escapeHtml(code)} · ${escapeHtml(stop.RoadName)} · checked ${time(data.meta.updatedAt)}</span></p>
             <button type="button" class="secondary road-conditions-button" data-road-stop="${escapeHtml(code)}">Road alerts near this stop ↗</button>
             <p class="small muted">Crowd levels use LTA’s seat / standing availability for each bus. They may change before boarding.</p>
             ${data.meta.wheelchairOnly ? '<p class="small muted">Wheelchair-equipped buses only. Stop access and wheelchair-bay space are not confirmed.</p>' : ''}
+            ${data.meta.crowding === 'seats' ? '<p class="small muted">Showing buses with seats reported available.</p>' : data.meta.crowding === 'avoid-high' ? '<p class="small muted">Showing buses with seats or standing space reported available.</p>' : ''}
             ${data.meta.stale ? '<p class="error">Cached response — arrivals could not be refreshed. Times below may be out of date.</p>' : ''}
-            ${services.length ? services.map(service => `<div class="bus-row"><div class="bus-row-heading"><span class="bus-number">${escapeHtml(service.ServiceNo)}</span><span class="muted">Next three buses</span></div><div class="bus-times">${['NextBus', 'NextBus2', 'NextBus3'].map((key, index) => {
+            ${services.length ? services.map(service => `<div class="bus-row"><div class="bus-row-heading"><span class="bus-number">${escapeHtml(service.ServiceNo)}</span><span class="muted">${filtered ? 'Matching arrivals' : 'Next three buses'}</span></div><div class="bus-times">${['NextBus', 'NextBus2', 'NextBus3'].map((key, index) => {
                 const bus = service[key];
                 const order = ['Next bus', '2nd bus', '3rd bus'][index];
+                if (filtered && !bus?.EstimatedArrival) return '';
                 if (!bus?.EstimatedArrival) return `<div class="bus-arrival no-prediction"><div class="arrival-time"><small>${order}</small><strong>—</strong></div><p class="small muted">${data.meta.wheelchairOnly ? 'No confirmed wheelchair arrival' : 'No prediction'}</p></div>`;
                 const mins = Math.ceil((Date.parse(bus.EstimatedArrival) - Date.now()) / 60000);
                 const type = ({ SD: 'Single deck', DD: 'Double deck', BD: 'Bendy' })[bus.Type] || 'Type unavailable';
                 return `<div class="bus-arrival"><div class="arrival-time"><small>${order}</small><strong>${mins < 0 ? 'Passed' : mins === 0 ? 'Arriving' : `${mins} min`}</strong><small>${time(bus.EstimatedArrival)}</small></div>${busCrowd(bus.Load, data.meta.stale || mins < 0)}<div class="arrival-details"><small>${type} · ${Number(bus.Monitored) === 1 ? 'Live prediction' : 'Scheduled'}${bus.Feature === 'WAB' ? ' · Wheelchair bus' : ''}</small></div></div>`;
-            }).join('')}</div></div>`).join('') : `<p class="muted">${data.meta.wheelchairOnly ? 'No upcoming bus arrivals with wheelchair access confirmed in this response.' : 'No arrivals reported. Services may not be operating at this time.'}</p>`}`;
+            }).join('')}</div></div>`).join('') : `<p class="muted">${filtered ? 'No upcoming arrivals match your crowd and access settings in the available readings. Try relaxing a filter or check again.' : 'No arrivals reported. Services may not be operating at this time.'}</p>`}`;
     } catch (error) { if (version === busVersion) $('bus-results').textContent = error.message; }
 }
 
@@ -483,6 +528,18 @@ $('bus-mode').addEventListener('click', () => switchMode('bus'));
 $('bus-form').addEventListener('submit', searchBus);
 $('bus-wheelchair-access').addEventListener('change', () => {
     $('wheelchair-access').checked = $('bus-wheelchair-access').checked;
+    $('wheelchair-access').dispatchEvent(new Event('change'));
+});
+$('bus-crowding').addEventListener('change', () => {
+    $('bus-crowd-preference').value = $('bus-crowding').value;
+    $('bus-crowd-preference').dispatchEvent(new Event('change'));
+});
+$('remember-preferences').addEventListener('change', rememberPreferences);
+$('reset-preferences').addEventListener('click', () => {
+    for (const [id, value] of Object.entries(preferenceDefaults)) {
+        if ($(id).type === 'checkbox') $(id).checked = value; else $(id).value = value;
+    }
+    $('remember-preferences').checked = false;
     $('wheelchair-access').dispatchEvent(new Event('change'));
 });
 $('fit-route-btn').addEventListener('click', fitMapRoute);
@@ -520,9 +577,11 @@ $('station-picker').addEventListener('close', () => {
     else if (stationPickerTarget) $(stationPickerTarget).focus({ preventScroll: true });
     syncViewport();
 });
-for (const id of ['origin-select', 'dest-select', 'bus-origin', 'bus-destination', 'preference', 'wheelchair-access', 'transfer-minutes']) {
+for (const id of ['origin-select', 'dest-select', 'bus-origin', 'bus-destination', 'preference', 'wheelchair-access', 'transfer-minutes', 'max-walk', 'walk-pace', 'bus-crowd-preference']) {
     $(id).addEventListener('change', () => {
+        if (id === 'wheelchair-access' && $('wheelchair-access').checked && Number($('transfer-minutes').value) < 8) $('transfer-minutes').value = '8';
         updateAccessControls();
+        rememberPreferences();
         syncStationPickers();
         requestVersion++; activeJourney = null; lastJourney = null; journeyBusy = false;
         $('plan-route-btn').disabled = false;
@@ -531,9 +590,11 @@ for (const id of ['origin-select', 'dest-select', 'bus-origin', 'bus-destination
         resetMapRoute();
         panelPage = 'planner';
         syncShell();
-        if (id === 'wheelchair-access') {
+        if (id === 'wheelchair-access' || id === 'bus-crowd-preference') {
             busVersion++;
+            $('bus-results').textContent = 'Checking arrivals with your updated filters…';
             if (activeBusStop) searchBus(null, true);
+            else $('bus-results').textContent = 'Search a stop to check arrivals with these filters.';
         }
     });
 }
@@ -550,6 +611,8 @@ installStopSearch('bus-stop-input', 'bus-search-options');
 let initialTheme = 'light';
 try { initialTheme = localStorage.getItem('railpulse-theme') || 'light'; } catch { /* Use the default theme. */ }
 setTheme(initialTheme);
+restorePreferences();
+updateAccessControls();
 syncViewport();
 syncShell();
 initialiseMap();

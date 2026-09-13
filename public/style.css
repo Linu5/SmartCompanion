@@ -73,9 +73,22 @@ input,select { width:100%; min-width:0; min-height:48px; background:var(--panel)
 .location-fields label:nth-of-type(2)::before { border-radius:3px; background:transparent; }
 .location-fields input,.location-fields select { border-color:transparent; min-height:44px; padding:8px 10px; font-size:15px; }
 .location-fields p { margin-bottom:0; }
-.journey-preferences { margin-top:15px; border-bottom:1px solid var(--border); padding-bottom:13px; font-size:13px; }
-.journey-preferences summary { min-height:32px; align-content:center; font-weight:650; }
-#preference-summary { float:right; color:var(--muted); font-size:11px; font-weight:400; padding-top:3px; }
+.journey-preferences { margin-top:24px; padding:20px 0 0; border-top:1px solid var(--border); font-size:14px; }
+.preferences-heading { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+.preferences-heading h2 { font-size:20px; letter-spacing:-.5px; margin:0 0 3px; }
+.preferences-heading .text-button { padding:8px; min-height:44px; }
+#preference-summary { color:var(--muted); font-size:12px; }
+.journey-preferences>p { margin:8px 0 16px; }
+.journey-preferences label { font-size:13px; }
+.preference-group { margin-top:20px; padding-top:18px; border-top:1px solid var(--border); }
+.preference-group h3 { font-size:14px; margin-bottom:10px; }
+.preference-group p { margin:8px 0 0; line-height:1.55; }
+.preference-group.access-option { padding:18px 0 0; }
+.preference-group.access-option p { margin-left:31px; }
+.preferences-footer { margin-top:20px; background:var(--soft); padding:12px; border-radius:12px; }
+.preferences-footer p { margin:4px 0 0 31px; }
+.applied-preferences { padding:12px 14px; background:var(--soft); border-radius:12px; font-size:12px; margin:0 0 16px; }
+.applied-preferences p { margin:4px 0 0; color:var(--muted); }
 .access-option { margin-top:12px; padding:0 2px; }
 .checkbox-label { display:flex; align-items:center; gap:10px; margin:0; min-height:44px; color:var(--text); cursor:pointer; font-size:13px; }
 .bus-access-filter { margin-top:12px; font-size:12px; }
@@ -83,7 +96,7 @@ input,select { width:100%; min-width:0; min-height:48px; background:var(--panel)
 .access-option p { margin:0 0 0 31px; font-size:11px; }
 .transfer-control { display:flex; align-items:center; gap:10px; font-size:13px; }
 .transfer-control input { width:85px; }
-#transfer-settings { margin-top:12px; padding:0 0 8px 31px; }
+#transfer-settings { margin-top:20px; padding:18px 0 0; }
 #transfer-settings p { margin:6px 0; }
 .access-checks { margin:14px 0; padding:14px; background:var(--soft); border:1px solid var(--border); border-radius:13px; font-size:13px; }
 .access-checks p { margin:8px 0; }
@@ -248,8 +261,8 @@ a { color:var(--green); }
     .checkbox-label { font-size:14px; min-height:48px; }
     .access-option { margin-top:14px; }
     .access-option p { font-size:12px; }
-    .journey-preferences { margin-top:12px; padding-bottom:8px; font-size:14px; }
-    .journey-preferences summary { min-height:44px; }
+    .journey-preferences { margin-top:20px; padding-bottom:8px; font-size:14px; }
+    .journey-preferences input,.journey-preferences select { font-size:16px; }
     #preference-summary { font-size:12px; }
     .data-notes { margin-top:16px; padding-top:8px; font-size:13px; }
     .card-body { font-size:14px; }

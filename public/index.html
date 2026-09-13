@@ -55,23 +55,46 @@
                         <p class="small muted">Find direct buses between two stops.</p>
                     </div>
                     <div id="compare-times-entry" class="compare-times-entry"><button id="compare-times-button" class="secondary" type="button" disabled aria-haspopup="dialog" aria-controls="timing-dialog">Compare departure times <span aria-hidden="true">↗</span></button><p id="compare-times-hint" class="small muted">Choose both stations to compare crowd forecasts and train times.</p></div>
-                    <div class="access-option">
-                        <label class="checkbox-label" for="wheelchair-access"><input type="checkbox" id="wheelchair-access" aria-describedby="wheelchair-help"> Wheelchair access</label>
-                        <p id="wheelchair-help" class="small muted">Lift checks & wheelchair-equipped buses.</p>
-                        <div id="transfer-settings" class="hidden">
-                            <label for="transfer-minutes">Time for each train transfer</label>
-                            <div class="transfer-control"><input id="transfer-minutes" type="number" min="4" max="30" step="1" value="8" required disabled aria-describedby="transfer-help"><span>minutes</span></div>
-                            <p id="transfer-help" class="small muted">Adjust this planning allowance for your pace and lift access.</p>
-                        </div>
-                    </div>
-                    <details class="journey-preferences"><summary>Journey preferences <span id="preference-summary">Fastest</span></summary>
+                    <section class="journey-preferences" aria-labelledby="preferences-title">
+                        <div class="preferences-heading"><div><h2 id="preferences-title">Journey preferences</h2><span id="preference-summary">Fastest</span></div><button id="reset-preferences" class="text-button" type="button">Reset</button></div>
+                        <p class="small muted">A journey that works for you.</p>
                         <label for="preference">What matters most?</label>
                         <select id="preference">
                             <option value="fastest">Shortest travel time</option>
                             <option value="walking">Less walking</option>
                             <option value="transfers">Fewer train transfers</option>
                         </select>
-                    </details>
+                        <div class="access-option preference-group">
+                            <h3>Accessibility</h3>
+                            <label class="checkbox-label" for="wheelchair-access"><input type="checkbox" id="wheelchair-access" aria-describedby="wheelchair-help"> Wheelchair access</label>
+                            <p id="wheelchair-help" class="small muted">Lift checks & wheelchair-equipped buses. Starts with extra transfer time; adjust it under Changing trains.</p>
+                        </div>
+                        <div id="walking-preferences" class="preference-group">
+                            <h3>Getting to the bus stop</h3>
+                            <label for="max-walk">Maximum walk at each end</label>
+                            <select id="max-walk" aria-describedby="walking-limit-help"><option value="auto">Use my journey priority</option><option value="250">250 m</option><option value="500">500 m</option><option value="1000">1 km</option><option value="1500">1.5 km</option></select>
+                            <p id="walking-limit-help" class="small muted">Up to 1 km at each end of a bus alternative.</p>
+                            <label for="walk-pace">Walking or rolling pace</label>
+                            <select id="walk-pace" aria-describedby="walk-pace-help"><option value="50">Relaxed · 3 km/h</option><option value="75" selected>Usual · 4.5 km/h</option><option value="100">Brisk · 6 km/h</option></select>
+                            <p id="walk-pace-help" class="small muted">Adjusts estimated time to bus stops and which arrivals you can reach. Paths and station walks are not measured.</p>
+                        </div>
+                        <div id="transfer-settings" class="preference-group">
+                            <h3>Changing trains</h3>
+                            <label for="transfer-minutes">Time for each train transfer</label>
+                            <div class="transfer-control"><input id="transfer-minutes" type="number" min="4" max="30" step="1" value="4" required inputmode="numeric" aria-describedby="transfer-help"><span>minutes</span></div>
+                            <p id="transfer-help" class="small muted">Allow 4–30 minutes between platforms. More time may mean catching a later train.</p>
+                        </div>
+                        <div id="crowd-preferences" class="preference-group">
+                            <h3>A more comfortable bus ride</h3>
+                            <label for="bus-crowd-preference">Bus crowd preference</label>
+                            <select id="bus-crowd-preference" aria-describedby="bus-crowd-help"><option value="any">Any crowd level</option><option value="avoid-high">Avoid high crowding</option><option value="seats">Seats reported available</option></select>
+                            <p id="bus-crowd-help" class="small muted">Applies to bus journeys and the Buses tab. Filters use current LTA readings; missing or old readings cannot meet a crowd filter. Seats may fill before boarding.</p>
+                        </div>
+                        <div class="preferences-footer">
+                            <label class="checkbox-label" for="remember-preferences"><input id="remember-preferences" type="checkbox" aria-describedby="preferences-storage-status"> Remember on this device</label>
+                            <p id="preferences-storage-status" class="small muted" role="status">Optional. Saves these settings in this browser.</p>
+                        </div>
+                    </section>
                 </form>
             </section>
             <section id="route-results" class="hidden" aria-live="polite"></section>
@@ -84,20 +107,23 @@
                     <datalist id="bus-search-options"></datalist>
                 </form>
                 <label class="checkbox-label bus-access-filter" for="bus-wheelchair-access"><input type="checkbox" id="bus-wheelchair-access"> Wheelchair-equipped buses only</label>
+                <label for="bus-crowding">Bus crowd preference</label>
+                <select id="bus-crowding" aria-describedby="bus-filter-help"><option value="any">Any crowd level</option><option value="avoid-high">Avoid high crowding</option><option value="seats">Seats reported available</option></select>
+                <p id="bus-filter-help" class="small muted">Shared with Journey preferences. A crowd filter excludes missing or old readings; seats are not guaranteed.</p>
                 <div id="bus-results" aria-live="polite"><p class="muted small">Arrival times, bus crowd levels and vehicle type.</p></div>
             </section>
             <details class="data-notes">
                 <summary>About these results</summary>
                 <p>Train departures and travel times use LTA’s published timetable, including its service calendars. They are scheduled times, not live predictions. Transfers allow four minutes; your actual walking time may differ.</p>
-                <p>Bus arrival predictions and occupancy come from LTA. Total bus journey times are calculated estimates: route distance at 18 km/h, plus 21 seconds per stop. Walking uses straight-line distance × 1.3 at 75 m/min; check your actual pedestrian route.</p>
+                <p>Bus arrival predictions and occupancy come from LTA. Total bus journey times are calculated estimates: route distance at 18 km/h, plus 21 seconds per stop. Walking uses straight-line distance × 1.3 at your selected pace (default 75 m/min); check your actual pedestrian route. Your maximum walking distance applies at each end of a bus alternative.</p>
                 <p>Bus crowd levels use LTA’s occupancy categories: low = seats available; moderate = standing available; high = limited standing. These are categories, not passenger counts or percentages. Missing or old readings are labelled, and occupancy can change before boarding.</p>
                 <p>Train crowd levels describe stations, not individual train carriages. LTA updates them in ten-minute intervals. Missing or old data is labelled.</p>
                 <p>The time comparison uses LTA's daily station crowd forecast in 30-minute intervals. Each level describes your starting station at that time, not the whole train journey. A missing forecast is unavailable, never assumed quiet. Train comparisons include scheduled waiting and transfers, but not your trip to the station. Current service and lift notices are applied; recheck before travelling.</p>
                 <p>Nearby road alerts come from LTA Traffic Incidents within 1.5 km of the selected station or bus stop. They are current reports, not future traffic predictions or a measurement of congestion along your bus route. No reported incident does not mean roads are clear.</p>
-                <p>Bus alternatives cover direct services within an estimated 1 km walk at each end (450 m with “Less walking”). Transfers between buses are not included. Diversions may change the published route.</p>
+                <p>Bus alternatives cover direct services within your chosen walking limit. Automatic uses 1 km at each end, or 450 m with “Less walking”. Crowd filters only accept upcoming arrivals with matching fresh readings; “Avoid high crowding” accepts seats or standing space, and “Seats reported available” accepts seats only. This may leave no matching arrivals. Transfers between buses are not included. Diversions may change the published route.</p>
                 <p>Map lines connect station or stop coordinates. They are schematic connections, not exact tracks or roads.</p>
                 <p>Wheelchair access filters bus predictions by LTA’s wheelchair-accessible bus flag. It also checks reported station lift maintenance and avoids transfers at affected stations. An outage at your start or destination is flagged for staff assistance; it does not mean every lift at that station is unavailable. No reported outage is not a guarantee that all lifts work.</p>
-                <p>Step-free routes to bus stops, accessible station entrances and wheelchair-bay availability are not verified by these feeds. Bus access-time estimates still use the general walking model; adjust for your pace. The train transfer allowance can be changed when wheelchair access is selected.</p>
+                <p>Step-free routes to bus stops, accessible station entrances and wheelchair-bay availability are not verified by these feeds. Bus access-time estimates use your selected walking or rolling pace. Everyone can adjust the train transfer allowance; enabling wheelchair access starts with at least eight minutes, which you can then change.</p>
                 <a href="https://www.lta.gov.sg/content/ltagov/en/getting_around/public_transport/a_better_public_transport_experience/an_inclusive_public_transport_system.html" target="_blank" rel="noreferrer">LTA accessibility information ↗</a><br>
                 <a href="https://datamall.lta.gov.sg/content/dam/datamall/datasets/LTA_DataMall_API_User_Guide.pdf" target="_blank" rel="noreferrer">LTA data documentation ↗</a>
             </details>

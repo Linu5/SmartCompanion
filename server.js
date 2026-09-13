@@ -6,12 +6,12 @@ const rail = require('./lib/rail');
 const bus = require('./lib/bus');
 const access = require('./lib/accessibility');
 const travelTimes = require('./lib/travel-times');
+const preferences = require('./lib/preferences');
 
 const app = express();
 app.disable('x-powered-by');
 app.use(express.static(path.join(__dirname, 'public')));
 const validStop = value => typeof value === 'string' && /^\d{5}$/.test(value);
-const validPreference = value => ['fastest', 'walking', 'transfers'].includes(value) ? value : 'fastest';
 const provenance = result => ({ source: 'LTA DataMall', updatedAt: result.updatedAt, stale: result.stale });
 const sendFeed = (res, result) => res.json({ ...result.data, meta: provenance(result) });
 
@@ -19,9 +19,11 @@ app.get('/api/health', (req, res) => res.json({ ok: true, keyConfigured: !!proce
 app.get('/api/alerts', async (req, res) => sendFeed(res, await lta.alerts()));
 app.get('/api/bus-arrival', async (req, res) => {
     if (!validStop(req.query.BusStopCode)) return res.status(400).json({ error: 'Enter a five-digit bus stop code.' });
+    const crowding = preferences.crowdSetting(req.query.busCrowding);
     const result = await lta.arrivals(req.query.BusStopCode);
     const wheelchair = req.query.wheelchair === 'true';
-    res.json({ ...(wheelchair ? access.filterArrivals(result.data) : result.data), meta: { ...provenance(result), wheelchairOnly: wheelchair } });
+    const data = preferences.filterCrowdArrivals(wheelchair ? access.filterArrivals(result.data) : result.data, crowding, result.stale);
+    res.json({ ...data, meta: { ...provenance(result), wheelchairOnly: wheelchair, crowding } });
 });
 app.get('/api/bus-stops', async (req, res) => {
     const result = await lta.busStops();
@@ -60,16 +62,15 @@ app.get('/api/road-conditions', async (req, res) => {
 app.get('/api/journey', async (req, res) => {
     const { origin, destination } = req.query;
     if (typeof origin !== 'string' || typeof destination !== 'string' || origin === destination) return res.status(400).json({ error: 'Choose two different stops or stations.' });
-    const preference = validPreference(req.query.preference);
+    const settings = preferences.journeySettings(req.query);
+    const { preference, transferMinutes } = settings;
     const wheelchair = req.query.wheelchair === 'true';
-    const transferMinutes = wheelchair && req.query.mode !== 'bus' ? Number(req.query.transferMinutes ?? 8) : 4;
-    if (!Number.isInteger(transferMinutes) || transferMinutes < 4 || transferMinutes > 30) return res.status(400).json({ error: 'Choose a transfer allowance from 4 to 30 minutes.' });
     if (req.query.mode === 'bus') {
         if (!validStop(origin) || !validStop(destination)) return res.status(400).json({ error: 'Choose valid five-digit bus stops.' });
         const stops = await lta.busStops();
         const from = stops.data.find(s => s.BusStopCode === origin), to = stops.data.find(s => s.BusStopCode === destination);
         if (!from || !to) return res.status(404).json({ error: 'Bus stop not found in LTA data.' });
-        const [options, notices] = await Promise.allSettled([bus.alternatives(from, to, preference, true, wheelchair), lta.alerts()]);
+        const [options, notices] = await Promise.allSettled([bus.alternatives(from, to, preference, true, wheelchair, settings), lta.alerts()]);
         if (options.status === 'rejected') throw options.reason;
         return res.json({ mode: 'bus', origin: from.Description, destination: to.Description, buses: options.value, accessibility: wheelchair ? { requested: true, stepFreePathVerified: false } : null, alerts: notices.status === 'fulfilled' ? { ...notices.value.data.value, meta: provenance(notices.value) } : null, generatedAt: new Date().toISOString() });
     }
@@ -92,7 +93,7 @@ app.get('/api/journey', async (req, res) => {
     const trainOnly = req.query.mode === 'train-only';
     const lines = [...new Set([...(train?.legs || []), ...(original?.legs || [])].map(leg => leg.line))];
     const [busResult, crowdResults] = await Promise.all([
-        trainOnly ? { options: [] } : bus.alternatives(from, to, preference, false, wheelchair).catch(() => ({ options: [], error: 'Bus alternatives are unavailable. Try again shortly.' })),
+        trainOnly ? { options: [] } : bus.alternatives(from, to, preference, false, wheelchair, settings).catch(() => ({ options: [], error: 'Bus alternatives are unavailable. Try again shortly.' })),
         Promise.all(lines.map(async line => {
             try { const result = await lta.crowd(line); return { line, value: result.data.value, meta: provenance(result) }; }
             catch { return { line, value: [], error: 'Crowd data unavailable' }; }
@@ -103,6 +104,7 @@ app.get('/api/journey', async (req, res) => {
 
 app.use('/api', (req, res) => res.status(404).json({ error: 'Endpoint not found.' }));
 app.use((error, req, res, next) => {
+    if (error.statusCode === 400) return res.status(400).json({ error: error.message });
     console.error(`Request failed: ${req.path}: ${error.message}`);
     res.status(503).json({ error: 'Transport data is temporarily unavailable. Please try again. No sample data is being shown.' });
 });

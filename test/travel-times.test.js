@@ -107,6 +107,14 @@ test('tomorrow can have scheduled trains without copying today’s crowd forecas
     assert.ok(result.slots.every(slot => slot.train && slot.crowd.status === 'unavailable'));
 });
 
+test('departure comparisons honour custom transfer time without requiring wheelchair mode', async () => {
+    const { dependencies, calls } = fixture();
+    const result = await times.compareTimes({ origin: 'A', destination: 'B', transferMinutes: '12' }, dependencies);
+    assert.equal(calls[0][6].transferMinutes, 12);
+    assert.equal(result.slots[0].train.transferMinutes, 12);
+    assert.equal(result.slots[0].accessibility, null);
+});
+
 test('missing secondary feeds preserve the timetable while accessibility remains unconfirmed', async () => {
     const { dependencies, calls } = fixture();
     for (const key of ['alerts', 'facilities', 'incidents', 'crowdForecast', 'crowd']) dependencies.lta[key] = async () => { throw new Error('Offline'); };
