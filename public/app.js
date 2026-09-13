@@ -326,6 +326,7 @@ function renderJourney(data, fit) {
         return usedStations.some(s => text.includes(s)) || [...usedLines].some(line => text.includes(line.toLowerCase()) || text.includes(aliases[line] || line.toLowerCase())) || data.buses.options.some(option => new RegExp(`\\b${option.service.replace(/[^a-z0-9]/gi, '')}\\b`, 'i').test(text));
     });
     results.innerHTML = `<p class="eyebrow">JOURNEY OPTIONS</p><h2>${escapeHtml(data.origin)} → ${escapeHtml(data.destination)}</h2>
+        ${data.mode !== 'bus' ? '<button type="button" class="secondary compare-results-button" data-compare-times>Compare departure times ↗</button>' : ''}
         ${recommendation ? `<div class="recommendation${data.affected ? ' warning' : ''}">${escapeHtml(recommendation)}</div>` : ''}
         ${accessibilityNotes(data)}
         ${!data.alerts || data.alerts.meta?.stale || data.noDetailedDisruption ? '<div class="recommendation warning">Current disruption details could not be confirmed. Check operator announcements before travelling.</div>' : ''}
@@ -459,6 +460,7 @@ async function searchBus(event, refresh = false) {
         if (!stop) { $('bus-results').textContent = 'Stop not found in LTA data.'; return; }
         const services = data.Services || [];
         $('bus-results').innerHTML = `<p><strong>${escapeHtml(stop.Description)}</strong><br><span class="small muted">${escapeHtml(code)} · ${escapeHtml(stop.RoadName)} · checked ${time(data.meta.updatedAt)}</span></p>
+            <button type="button" class="secondary road-conditions-button" data-road-stop="${escapeHtml(code)}">Road alerts near this stop ↗</button>
             <p class="small muted">Crowd levels use LTA’s seat / standing availability for each bus. They may change before boarding.</p>
             ${data.meta.wheelchairOnly ? '<p class="small muted">Wheelchair-equipped buses only. Stop access and wheelchair-bay space are not confirmed.</p>' : ''}
             ${data.meta.stale ? '<p class="error">Cached response — arrivals could not be refreshed. Times below may be out of date.</p>' : ''}

@@ -54,6 +54,7 @@
                         <datalist id="bus-destination-options"></datalist>
                         <p class="small muted">Find direct buses between two stops.</p>
                     </div>
+                    <div id="compare-times-entry" class="compare-times-entry"><button id="compare-times-button" class="secondary" type="button" disabled aria-haspopup="dialog" aria-controls="timing-dialog">Compare departure times <span aria-hidden="true">↗</span></button><p id="compare-times-hint" class="small muted">Choose both stations to compare crowd forecasts and train times.</p></div>
                     <div class="access-option">
                         <label class="checkbox-label" for="wheelchair-access"><input type="checkbox" id="wheelchair-access" aria-describedby="wheelchair-help"> Wheelchair access</label>
                         <p id="wheelchair-help" class="small muted">Lift checks & wheelchair-equipped buses.</p>
@@ -91,6 +92,8 @@
                 <p>Bus arrival predictions and occupancy come from LTA. Total bus journey times are calculated estimates: route distance at 18 km/h, plus 21 seconds per stop. Walking uses straight-line distance × 1.3 at 75 m/min; check your actual pedestrian route.</p>
                 <p>Bus crowd levels use LTA’s occupancy categories: low = seats available; moderate = standing available; high = limited standing. These are categories, not passenger counts or percentages. Missing or old readings are labelled, and occupancy can change before boarding.</p>
                 <p>Train crowd levels describe stations, not individual train carriages. LTA updates them in ten-minute intervals. Missing or old data is labelled.</p>
+                <p>The time comparison uses LTA's daily station crowd forecast in 30-minute intervals. Each level describes your starting station at that time, not the whole train journey. A missing forecast is unavailable, never assumed quiet. Train comparisons include scheduled waiting and transfers, but not your trip to the station. Current service and lift notices are applied; recheck before travelling.</p>
+                <p>Nearby road alerts come from LTA Traffic Incidents within 1.5 km of the selected station or bus stop. They are current reports, not future traffic predictions or a measurement of congestion along your bus route. No reported incident does not mean roads are clear.</p>
                 <p>Bus alternatives cover direct services within an estimated 1 km walk at each end (450 m with “Less walking”). Transfers between buses are not included. Diversions may change the published route.</p>
                 <p>Map lines connect station or stop coordinates. They are schematic connections, not exact tracks or roads.</p>
                 <p>Wheelchair access filters bus predictions by LTA’s wheelchair-accessible bus flag. It also checks reported station lift maintenance and avoids transfers at affected stations. An outage at your start or destination is flagged for staff assistance; it does not mean every lift at that station is unavailable. No reported outage is not a guarantee that all lifts work.</p>
@@ -120,5 +123,19 @@
     </dialog>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script src="/app.js" defer></script>
+    <dialog id="timing-dialog" class="timing-dialog" aria-labelledby="timing-title">
+        <div class="station-dialog-header"><div><p class="eyebrow">PLAN AHEAD</p><h2 id="timing-title">When should I go?</h2></div><button id="timing-close" type="button" aria-label="Close time comparison">✕</button></div>
+        <div id="timing-scroll" class="timing-scroll">
+            <p id="timing-route" class="timing-route"></p>
+            <form id="timing-form" class="timing-form">
+                <div><label for="timing-date">Day</label><input id="timing-date" type="date" required></div>
+                <div><label for="timing-time">At the station from</label><select id="timing-time" required aria-describedby="timing-status"></select></div>
+                <button class="primary" id="timing-submit" type="submit">Compare times <span aria-hidden="true">→</span></button>
+            </form>
+            <div id="timing-status" class="small" role="status"></div>
+            <div id="timing-results"></div>
+        </div>
+    </dialog>
+    <script src="/travel-times.js" defer></script>
 </body>
 </html>

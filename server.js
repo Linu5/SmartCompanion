@@ -5,6 +5,7 @@ const lta = require('./lib/lta');
 const rail = require('./lib/rail');
 const bus = require('./lib/bus');
 const access = require('./lib/accessibility');
+const travelTimes = require('./lib/travel-times');
 
 const app = express();
 app.disable('x-powered-by');
@@ -41,6 +42,20 @@ app.get('/api/network', async (req, res) => {
     res.json({ stations: network.stations, segments: network.segments, meta: { source: 'LTA GTFS timetable', updatedAt: data.updatedAt, stale: data.stale, validUntil: data.feed?.feed_end_date } });
 });
 app.get('/api/facilities', async (req, res) => sendFeed(res, await lta.facilities()));
+app.get('/api/travel-times', async (req, res) => {
+    try { res.json(await travelTimes.compareTimes(req.query)); }
+    catch (error) {
+        if (error.statusCode === 400) return res.status(400).json({ error: error.message });
+        throw error;
+    }
+});
+app.get('/api/road-conditions', async (req, res) => {
+    if (!validStop(req.query.BusStopCode)) return res.status(400).json({ error: 'Enter a five-digit bus stop code.' });
+    const stops = await lta.busStops();
+    const stop = stops.data.find(row => row.BusStopCode === req.query.BusStopCode);
+    if (!stop) return res.status(404).json({ error: 'Bus stop not found in LTA data.' });
+    res.json({ stop: { code: stop.BusStopCode, name: stop.Description }, ...await travelTimes.roadConditions({ lat: stop.Latitude, lon: stop.Longitude }) });
+});
 
 app.get('/api/journey', async (req, res) => {
     const { origin, destination } = req.query;

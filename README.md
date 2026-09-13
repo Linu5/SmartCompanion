@@ -22,6 +22,8 @@ Open [http://localhost:3000](http://localhost:3000). Use `npm run dev` for autom
 
 - **Phone and laptop layouts:** full-height Plan and Buses views with bottom navigation on phones; a floating side panel beside the map on laptops. Phone station selection is searchable by name or code, and bus arrivals use readable rows with crowd levels. Map is one tap away, and returning to Plan retains journey results and scroll position. The phone layout adapts to short screens and the visible keyboard viewport. A saved light/dark preference works across both layouts. The bus-arrivals tab is independent of the train-only journey filter and shares the wheelchair requirement.
 - **Train only:** plan a scheduled train journey with disruption checks and station crowd levels, without fetching bus alternatives or showing bus results.
+- **Compare departure times:** choose two stations, then compare six half-hour options starting at a chosen Singapore date/time. Each row shows scheduled journey duration, arrival time and LTA's station crowd forecast, with expandable train details. A quieter option is highlighted only when available forecasts differ. Phone comparisons open full screen; laptops use a centred dialog.
+- **Nearby road alerts:** check LTA Traffic Incidents within 1.5 km of the boarding station or a bus stop. Open them from the time comparison or the next-buses checker. These are current incident reports, not a congestion score or a forecast for a future bus journey.
 - **Wheelchair access:** an independent requirement for any journey mode. Filter bus arrivals using LTA’s `Feature=WAB`, check live lift-maintenance notices at boarding/transfer/destination stations, and avoid platform transfers at stations with reported lift outages. Choose a train transfer allowance of 4–30 minutes (default eight when enabled). Your time/transfer preference remains separate.
 - **Train & bus:** select two active train stations and compare a scheduled train itinerary with nearby direct bus services. Choose shorter travel time, less walking, or fewer train transfers.
 - **Bus only:** search bus stops by name or code, then find direct services between them.
@@ -39,6 +41,8 @@ Open [http://localhost:3000](http://localhost:3000). Use `npm run dev` for autom
 | Train stations, trips, departure and arrival times | `GTFSScheduleTrain` → LTA ZIP | Published schedule, **not live train prediction** |
 | Service notices and affected segments | `TrainServiceAlerts` | Current LTA service advisories |
 | Station crowd levels | `PCDRealTime` | LTA observations at ten-minute intervals |
+| Future station crowd levels | `PCDForecast` | LTA's daily forecast in 30-minute intervals; exact station and forecast date must match |
+| Nearby road alerts | `TrafficIncidents`, all pages | Current reported incidents within 1.5 km; no reports does not mean roads are clear |
 | Lift-maintenance notices | `v2/FacilitiesMaintenance` | LTA reported lift outages; no report does not guarantee a working step-free path |
 | Bus stop names and coordinates | `BusStops`, all pages | LTA reference data |
 | Bus direction, stop order and route distance | `BusRoutes`, all pages | Published LTA service routes |
@@ -50,11 +54,15 @@ The backend downloads train timetables and the full bus reference datasets to th
 
 Lift-maintenance data is cached for one minute. Failed or stale lift checks are explicitly marked. Wheelchair-equipped bus filtering also applies to the standalone next-buses search. Missing accessibility flags are treated as unconfirmed, not as proof that a vehicle is inaccessible.
 
+Station forecasts are cached for 30 minutes, with a separate key for each Singapore date; road incidents for two minutes. `GET /api/travel-times?origin=EW24&destination=EW23` defaults to the next half-hour. Optional `start` uses `YYYY-MM-DDTHH:00:00+08:00` or `HH:30` (URL-encode the `+`); it accepts the coming seven days. It also accepts `wheelchair`, `transferMinutes` and `preference`. `GET /api/road-conditions?BusStopCode=01012` checks current reports near that stop.
+
 Source documentation: [LTA DataMall API guide](https://datamall.lta.gov.sg/content/dam/datamall/datasets/LTA_DataMall_API_User_Guide.pdf), [GTFS schedule reference](https://gtfs.org/documentation/schedule/reference/).
 
 ## Limits and estimates
 
 - Train journeys use timetables and a four-minute allowance for platform transfers. They do not promise the actual next train time. The search looks up to three hours ahead; it does not recommend waiting until the next morning.
+- Time comparisons start **at the origin station**, excluding the trip from home/work. Crowding is for that station and the initial boarding line at the selected time, not a train carriage, transfers or the entire journey. Future dates show unavailable when LTA has not supplied matching forecasts; today's forecast is never reused for tomorrow. Current disruption/lift notices are applied conservatively and may change before a future departure. Expired timetables never produce a journey recommendation.
+- Future bus occupancy and route traffic forecasts are not provided by these feeds. The next-buses checker continues to show the real upcoming arrivals and occupancy categories; nearby road reports are separate. An empty incident feed is not evidence of free-flowing traffic.
 - Published service calendars apply planned adjustments. Text advisories are surfaced, but the app does not attempt to turn arbitrary text into verified closure geometry. Platform announcements and operator instructions still matter.
 - Bus alternatives include **direct services only**, within an estimated 1 km walk at either end, or 450 m for less walking. The search checks up to 12 nearby stops at either end. Bus transfers and mixed train/bus itineraries are not yet supported.
 - Bus ride estimates use the published route distance at 18 km/h plus 21 seconds per stop. Walk estimates use straight-line distance multiplied by 1.3 at 75 m/min. These are transparent planning assumptions, not measured journey times or pedestrian directions.
@@ -70,7 +78,7 @@ Source documentation: [LTA DataMall API guide](https://datamall.lta.gov.sg/conte
 npm test
 ```
 
-The tests cover intermediate-station disruptions, multiple affected segments, exact station-code matching, service calendars and exceptions, overnight trips, missed departures, directional bus routes, loop visits, walking constraints, stale responses and unavailable feeds.
+The tests cover intermediate-station disruptions, multiple affected segments, exact station-code matching, service calendars and exceptions, overnight trips, missed departures, directional bus routes, loop visits, walking constraints, stale responses and unavailable feeds. Time-comparison tests additionally cover date/interval matching, forecast gaps, live-reading expiry, independent future routes, accessibility settings, expired timetables and road-incident proximity.
 
 On 10 September 2026, the source audit found 184 distinct active train stations, 5,207 bus stops and 26,808 bus-route records. Representative train legs were matched back to their source GTFS departure/arrival records; a bus journey was matched to its ordered LTA stop sequence. Bahar Junction was rejected as a departure station, and `/.env` returned 404. Counts change as LTA updates its data.
 
@@ -81,7 +89,9 @@ On 10 September 2026, the source audit found 184 distinct active train stations,
 - `lib/rail.js`: GTFS download/parsing, active network and scheduled routing.
 - `lib/bus.js`: stop proximity, direct route matching and arrival checks.
 - `lib/accessibility.js`: wheelchair-bus filtering and station lift-notice matching.
+- `lib/travel-times.js`: time comparisons, source forecast matching and nearby road reports.
 - `public/`: browser interface and map.
 - `test/routing.test.js`: offline routing and data-integrity tests.
+- `test/travel-times.test.js`: offline comparison and forecast-integrity tests.
 
 The first journey can take longer while all bus reference pages download. No API key is included in source code or returned to the frontend.
